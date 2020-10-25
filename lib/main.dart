@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'information.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -95,14 +97,38 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            GestureDetector(
+              child: Container(
+                constraints: new BoxConstraints.expand(
+                  height: 200.0,
+                ),
+                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                margin: new EdgeInsets.only(bottom: 4),
+                decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage('images/news_pic_1.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: new Stack(
+                  children: <Widget>[
+                    new Center(
+                      child: new Text('Title',
+                          style: new TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => MyHomePage(title: 'Home Page')));
+              },
             ),
           ],
         ),
@@ -111,7 +137,35 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text("Ashish Rawat"),
+              accountEmail: Text("ashishrawat2911@gmail.com"),
+              currentAccountPicture: Image.asset("images/el_herz.png",),
+            ),
+            ListTile(
+              title: Text("Ttem 1"),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'Festival Information')));
+              },
+            ),
+            ListTile(
+              title: Text("Item 2"),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () {
+
+              },
+            ),
+          ],
+        ),
+      ),// This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+
