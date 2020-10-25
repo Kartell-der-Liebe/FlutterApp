@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        fontFamily: "EineLiebe",
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -126,8 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => MyHomePage(title: 'Home Page')));
+                //Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'Festival Information')));
               },
             ),
           ],
@@ -147,15 +148,14 @@ class _MyHomePageState extends State<MyHomePage> {
               currentAccountPicture: Image.asset("images/el_herz.png",),
             ),
             ListTile(
-              title: Text("Ttem 1"),
+              title: Text("Festival Information"),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {
-                Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'Festival Information')));
               },
             ),
             ListTile(
-              title: Text("Item 2"),
+              title: Text("News"),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {
 
