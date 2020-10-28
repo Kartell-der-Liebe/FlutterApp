@@ -153,20 +153,22 @@ class RSSReaderState extends State<RSSReader> {
                     margin: EdgeInsets.only(
                       bottom: 5.0,
                     ),
-                    decoration: new BoxDecoration(
-                        border: new Border(
-                            top: BorderSide(),
-                            right: BorderSide(),
-                            left: BorderSide(),
-                            bottom: BorderSide()
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10)
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
-                        borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(10.0),
-                            topRight: const Radius.circular(10.0),
-                            bottomLeft: const Radius.circular(10.0),
-                            bottomRight: const Radius.circular(10.0)
-                        )
-
+                      ],
                     ),
                     child: ListTile(
                       title: title(item.title),

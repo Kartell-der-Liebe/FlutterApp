@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/food.dart';
+import 'package:flutter_app/lineUp.dart';
 import 'package:flutter_app/rss_reader.dart';
 
 import 'information.dart';
@@ -72,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
+        child: ListView(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -87,7 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             GestureDetector(
               child: Container(
@@ -98,14 +99,107 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage('images/news_pic_1.png'),
+                    image: new AssetImage('assets/images/news_pic_1.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
                 child: new Stack(
                   children: <Widget>[
                     new Center(
-                      child: new Text('Title',
+                      child: new Text('Line Up',
+                          style: new TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                //Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => LineUpPage(title: 'Line Up')));
+              },
+            ),
+            GestureDetector(
+              child: Container(
+                constraints: new BoxConstraints.expand(
+                  height: 200.0,
+                ),
+                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                margin: new EdgeInsets.only(bottom: 4),
+                decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage('assets/images/news_pic_1.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: new Stack(
+                  children: <Widget>[
+                    new Center(
+                      child: new Text('Food',
+                          style: new TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                //Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => FoodPage(title: 'Food')));
+              },
+            ),
+            GestureDetector(
+              child: Container(
+                constraints: new BoxConstraints.expand(
+                  height: 200.0,
+                ),
+                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                margin: new EdgeInsets.only(bottom: 4),
+                decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage('assets/images/news_pic_1.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: new Stack(
+                  children: <Widget>[
+                    new Center(
+                      child: new Text('News',
+                          style: new TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                //Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'News')));
+              },
+            ),
+            GestureDetector(
+              child: Container(
+                constraints: new BoxConstraints.expand(
+                  height: 200.0,
+                ),
+                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                margin: new EdgeInsets.only(bottom: 4),
+                decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage('assets/images/news_pic_1.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: new Stack(
+                  children: <Widget>[
+                    new Center(
+                      child: new Text('Festival Information',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
@@ -125,28 +219,55 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       drawer: Drawer(
         child: ListView(
-          children: <Widget>[
-            DrawerHeader(
-              child: Image.asset("images/el_herz.png",)
-            ),
-            ListTile(
-              title: Text("Festival Information"),
-              trailing: Icon(Icons.arrow_forward),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'Festival Information')));
-              },
-            ),
-            ListTile(
-              title: Text("News"),
-              trailing: Icon(Icons.arrow_forward),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => RSSReader()));
-              },
-            ),
-          ],
-        ),
-      ),// This trailing comma makes auto-formatting nicer for build methods.
-    );
+            children: <Widget>[
+              Container(
+                decoration: new BoxDecoration(
+                  color:Color(0x0FF002C3C),
+                  gradient: LinearGradient(
+                      colors: [
+                        Color(0x0FF002C3C),
+                        Color(0xFFFDEA04)
+                      ],
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft
+                    ),
+                ),
+                child:DrawerHeader(
+                  child: Image.asset("assets/images/el_herz.png",),
+                ),
+              ),
+              ListTile(
+                title: Text("Line Up"),
+                leading: Icon(Icons.queue_music),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => LineUpPage(title: 'Line Up')));
+                },
+              ),
+              ListTile(
+                title: Text("Food"),
+                leading: Icon(Icons.fastfood),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => FoodPage(title: 'Food')));
+                },
+              ),
+              ListTile(
+                title: Text("Festival Information"),
+                leading: Icon(Icons.info),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'Festival Information')));
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.fiber_new),
+                title: Text("News"),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => RSSReader()));
+                },
+              ),
+            ],
+          ),
+        ),// This trailing comma makes auto-formatting nicer for build methods.
+      );
   }
 }
 

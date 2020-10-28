@@ -1,0 +1,167 @@
+{
+  "year": "2021",
+  "link": "https://eineliebe.de/",
+  "stage": [
+    {
+      "name": "DJ Zelt",
+      "time": ["1400", "1600", "1800"],
+      "header": [
+        "Time",
+        "Freitag",
+        "Samstag",
+        "Sonntag"
+      ]
+    },
+    {
+      "name": "Main Stage",
+      "header": ["Time","Freitag", "Samstag", "Sonntag"],
+      "time": ["1400", "1600", "1800"]
+    }
+  ],
+  "acts": [
+      {
+        "name": "Blümchen",
+        "time": "1400",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Friday",
+        "image": "assets/image/line_up_britney.png"
+      },
+      {
+        "name": "Britney Spears",
+        "time": "1400",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Saturday",
+        "image": "assets/image/line_up_britney.png"
+      },
+      {
+        "name": "Die Doofen",
+        "time": "1400",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Saturday",
+        "image": "assets/image/line_up_britney.png"
+      },
+      {
+        "name": "Vader Abraham",
+        "time": "1600",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Friday",
+        "image": "assets/image/line_up_britney.png"
+      },
+      {
+        "name": "Scooter",
+        "time": "1600",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Saturday",
+        "image": "assets/image/line_up_britney.png"
+      },
+      {
+        "name": "Jojo",
+        "time": "1600",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Saturday",
+        "image": "assets/image/line_up_britney.png"
+      },
+      {
+        "name": "Martin Garrix",
+        "time": "1800",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Friday",
+        "image": "assets/image/line_up_britney.png"
+      },
+      {
+        "name": "W&W",
+        "time": "1800",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Saturday",
+        "image": "assets/image/line_up_britney.png"
+      },
+      {
+        "name": "Sebi",
+        "time": "1800",
+        "stage": "DJ Zelt",
+        "duration": "120",
+        "day": "Saturday",
+        "image": "assets/image/line_up_britney.png"
+      },
+    {
+      "name": "Alex",
+      "time": "1400",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Friday",
+      "image": "assets/image/line_up_britney.png"
+    },
+    {
+      "name": "Björn",
+      "time": "1400",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Saturday",
+      "image": "assets/image/line_up_britney.png"
+    },
+    {
+      "name": "Babsi",
+      "time": "1400",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Saturday",
+      "image": "assets/image/line_up_britney.png"
+    },
+    {
+      "name": "Scooter",
+      "time": "1600",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Friday",
+      "image": "assets/image/line_up_britney.png"
+    },
+    {
+      "name": "Da Tweekaz",
+      "time": "1600",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Saturday",
+      "image": "assets/image/line_up_britney.png"
+    },
+    {
+      "name": "Jojo",
+      "time": "1600",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Saturday",
+      "image": "assets/image/line_up_britney.png"
+    },
+    {
+      "name": "Martin Garrix",
+      "time": "1800",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Friday",
+      "image": "assets/image/line_up_britney.png"
+    },
+    {
+      "name": "W&W",
+      "time": "1800",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Saturday",
+      "image": "assets/image/line_up_britney.png"
+    },
+    {
+      "name": "Sebi",
+      "time": "1800",
+      "stage": "Main Stage",
+      "duration": "120",
+      "day": "Saturday",
+      "image": "assets/image/line_up_britney.png"
+    }
+  ]
+}
