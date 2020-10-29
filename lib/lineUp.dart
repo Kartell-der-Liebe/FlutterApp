@@ -4,12 +4,48 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/calender/calender.dart';
+import 'package:flutter_app/calender/calenderStart.dart';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:device_calendar/device_calendar.dart';
 
-class LineUpPage extends StatelessWidget {
+class AppRoutes {
+  static final calendars = "/";
+}
+
+
+class LineUpPage extends StatefulWidget {
   final String title;
 
   LineUpPage({Key key, this.title}) : super(key: key);
+
+
+  @override
+  LineUpPageState createState() => LineUpPageState();
+}
+
+class LineUpPageState extends State<LineUpPage>{
+
+  //Calendar Variables
+  bool deleted = false;
+  bool calendarSelected = false;
+  String calendarButtonText = 'Select Calendar to Add Events';
+  String _currentCalendarID = '';
+  DeviceCalendarPlugin _deviceCalendarPlugin = new DeviceCalendarPlugin();
+
+  bool _setCalendarCallback(
+      String calendarID, String calendarName, DeviceCalendarPlugin deviceCal) {
+    //Calendar Callback Function used by Calendar Page
+    //Calendar Page will call the callback to provide calendar info needed
+    //to load mma events into calendar
+    setState(() {
+      _currentCalendarID = calendarID;
+      calendarButtonText = calendarName;
+      _deviceCalendarPlugin = deviceCal;
+      calendarSelected = false;
+    });
+  }
 
 
   @override
@@ -30,7 +66,7 @@ class LineUpPage extends StatelessWidget {
             children: [
               Container(
                 child: new Center(
-            // Use future builder and DefaultAssetBundle to load the local JSON file
+                  // Use future builder and DefaultAssetBundle to load the local JSON file
                   child: new FutureBuilder(
                     future: DefaultAssetBundle.of(context).loadString('assets/json/acts.json'),
                     builder: (context, snapshot) {
@@ -49,9 +85,9 @@ class LineUpPage extends StatelessWidget {
               ),
               Container(
                 child: new Center(
-              // Use future builder and DefaultAssetBundle to load the local JSON file
+                  // Use future builder and DefaultAssetBundle to load the local JSON file
                   child: new FutureBuilder(
-                    future: DefaultAssetBundle.of(context).loadString('assets/json/timeTable.json'),
+                      future: DefaultAssetBundle.of(context).loadString('assets/json/timeTable.json'),
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
@@ -113,7 +149,10 @@ class Act{
 
 class ActList extends StatelessWidget {
   final List<Act> acts;
-  ActList({Key key, this.acts}) : super(key: key);
+  Function callback;
+  ActList({Key key, this.acts, this.callback}) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +179,20 @@ class ActList extends StatelessWidget {
                     new Center(
                       child: new Text(acts[index].name,style: new TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0,)
                       ),
+                    ),
+                    GestureDetector(
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        child: SizedBox(
+                            child: Image.asset('assets/images/calendar_icon_kartell.png',height: 60,
+                            )
+                        ),
+                      ),
+                      onTap: (){
+
+                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => CalenderStart()));
+
+                      },
                     ),
                   ],
                 ),

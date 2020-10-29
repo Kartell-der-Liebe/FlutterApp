@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Eine Liebe',
       theme: ThemeData(
         fontFamily: "EineLiebe",
         // This is the theme of your application.
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Home Page'),
     );
   }
 }
@@ -96,13 +96,13 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               child: Container(
                 constraints: new BoxConstraints.expand(
-                  height: 170,
+                  height: 200,
                 ),
                 padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage('assets/images/news_pic_1.png'),
+                    image: new AssetImage('assets/images/lineup_pic_1.jpg'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -112,7 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: new Text('Line Up',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
+                            fontSize: 40.0,
+                            color: MyColors.eineLiebeDunkel
                           )
                       ),
                     ),
@@ -127,13 +128,13 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               child: Container(
                 constraints: new BoxConstraints.expand(
-                  height: 170.0,
+                  height: 200.0,
                 ),
                 padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage('assets/images/news_pic_1.png'),
+                    image: new AssetImage('assets/images/food_pic_3.png'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -142,8 +143,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     new Center(
                       child: new Text('Food',
                           style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40.0,
+                              color: MyColors.eineLiebeDunkel
                           )
                       ),
                     ),
@@ -158,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               child: Container(
                 constraints: new BoxConstraints.expand(
-                  height: 170.0,
+                  height: 200.0,
                 ),
                 padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
@@ -173,8 +175,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     new Center(
                       child: new Text('News',
                           style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40.0,
+                              color: MyColors.eineLiebeDunkel
                           )
                       ),
                     ),
@@ -189,13 +192,13 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               child: Container(
                 constraints: new BoxConstraints.expand(
-                  height: 170.0,
+                  height: 200.0,
                 ),
                 padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage('assets/images/news_pic_1.png'),
+                    image: new AssetImage('assets/images/info_pic_1.png'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -203,9 +206,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: <Widget>[
                     new Center(
                       child: new Text('Festival Information',
+                          textAlign: TextAlign.center,
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
+                            fontSize: 40.0,
+                            color: MyColors.eineLiebeDunkel,
                           )
                       ),
                     ),
