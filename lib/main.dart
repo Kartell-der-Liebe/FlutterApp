@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/food.dart';
 import 'package:flutter_app/lineUp.dart';
 import 'package:flutter_app/rss_reader.dart';
+import 'package:flutter_app/utility.dart';
 
 import 'information.dart';
 
@@ -26,7 +27,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: MyColors.eineLiebeDunkelMaterialApp,
+        indicatorColor: MyColors.eineLiebeHellMaterialApp,
+
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
@@ -93,14 +96,14 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               child: Container(
                 constraints: new BoxConstraints.expand(
-                  height: 200.0,
+                  height: 170,
                 ),
                 padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
                     image: new AssetImage('assets/images/news_pic_1.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
                 child: new Stack(
@@ -124,14 +127,14 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               child: Container(
                 constraints: new BoxConstraints.expand(
-                  height: 200.0,
+                  height: 170.0,
                 ),
                 padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
                     image: new AssetImage('assets/images/news_pic_1.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
                 child: new Stack(
@@ -155,14 +158,14 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               child: Container(
                 constraints: new BoxConstraints.expand(
-                  height: 200.0,
+                  height: 170.0,
                 ),
                 padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
                     image: new AssetImage('assets/images/news_pic_1.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
                 child: new Stack(
@@ -180,20 +183,20 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               onTap: () {
                 //Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'News')));
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => NewsPage(title: 'News')));
               },
             ),
             GestureDetector(
               child: Container(
                 constraints: new BoxConstraints.expand(
-                  height: 200.0,
+                  height: 170.0,
                 ),
                 padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
                     image: new AssetImage('assets/images/news_pic_1.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
                 child: new Stack(
@@ -261,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 leading: Icon(Icons.fiber_new),
                 title: Text("News"),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => RSSReader()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => NewsPage()));
                 },
               ),
             ],

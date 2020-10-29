@@ -4,17 +4,17 @@ import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
-class RSSReader extends StatefulWidget {
-  RSSReader() : super();
+class NewsPage extends StatefulWidget {
+  NewsPage({Key key, this.title}) : super(key: key);
 
   // Setting title for the action bar.
-  final String title = 'Festival News';
+  final String title;
 
   @override
-  RSSReaderState createState() => RSSReaderState();
+  NewsPageState createState() => NewsPageState();
 }
 
-class RSSReaderState extends State<RSSReader> {
+class NewsPageState extends State<NewsPage> {
   // Feed URL being used for the app. In this case is the Hacker News job feed.
   static const String FEED_URL = 'https://eineliebe.de/feed/';
 

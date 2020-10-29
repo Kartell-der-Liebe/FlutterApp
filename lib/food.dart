@@ -20,8 +20,6 @@ class FoodPage extends StatelessWidget {
           appBar: new AppBar(
             title: Text("Line Up"),
             bottom: TabBar(
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.black38,
               tabs: [
                 new Tab(text: "Foodtruck"),
                 new Tab(text: "Food Sharing"),
