@@ -3,11 +3,14 @@ import 'package:flutter_app/food.dart';
 import 'package:flutter_app/googleMaps.dart';
 import 'package:flutter_app/lineUp.dart';
 import 'package:flutter_app/rss_reader.dart';
+import 'package:flutter_app/tmp.dart';
 import 'package:flutter_app/utility.dart';
 
 import 'information.dart';
 
 void main() {
+  /*PushNotificationsManager pushNotificationsManager = new PushNotificationsManager();
+  pushNotificationsManager.init();*/
   runApp(MyApp());
 }
 
@@ -60,6 +63,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +230,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      drawer: Drawer(
+      drawer:
+      Drawer(
         child: ListView(
             children: <Widget>[
               Container(
@@ -263,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text("Festival Information"),
                 leading: Icon(Icons.info),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'Festival Information')));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: "Festival Information")));
                 },
               ),
               ListTile(

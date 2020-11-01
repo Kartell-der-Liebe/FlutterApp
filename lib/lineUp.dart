@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/calender/calender.dart';
 import 'package:flutter_app/calender/calenderStart.dart';
+import 'package:flutter_app/tmp.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:device_calendar/device_calendar.dart';
@@ -190,7 +191,7 @@ class ActList extends StatelessWidget {
                       ),
                       onTap: (){
 
-                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => CalenderStart()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => TMPApp(act: acts[index])));
 
                       },
                     ),
