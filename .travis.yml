@@ -27,7 +27,7 @@ matrix:
       before_install:
         - yes | sdkmanager "platforms;android-29"
       install:
-        - sudo apt-get install -y --no-install-recommens lib32stc++6 libstdc++6 > /dev/null
+        - sudo apt-get install -y lib32stc++6 libstdc++6 > /dev/null
         - git clone https://github.com/flutter/flutter.git -b stable
         - export PATH=$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH
         - flutter doctor
@@ -37,15 +37,14 @@ matrix:
     - os: osx
       language: generic
       osx_image: xcode12.2
-      before_script:
-        - pip install six
-        - brew update
-        - brew install --HEAD libimobiledevice
-        - brew install ideviceinstaller
-        - brew install ios-deploy
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+      install:
+        - sudo apt-get install -y lib32stc++6 libstdc++6 > /dev/null
+        - git clone https://github.com/flutter/flutter.git -b stable
+        - export PATH=$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH
+        - flutter doctor
+
       script:
-        - ./flutter/bin/flutter -v build ios --no-codesign
+        - flutter -v build ios --no-codesign
 
 cache:
   directories:
