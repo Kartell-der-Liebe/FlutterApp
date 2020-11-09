@@ -38,7 +38,6 @@ matrix:
       language: generic
       osx_image: xcode12.2
       install:
-        - sudo apt-get install -y lib32stdc++6 libstdc++6 > /dev/null
         - git clone https://github.com/flutter/flutter.git -b stable
         - export PATH=$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH
         - flutter doctor
