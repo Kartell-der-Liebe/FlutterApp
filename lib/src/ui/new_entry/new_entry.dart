@@ -6,7 +6,7 @@ import 'package:flutter_app/src/models/errors.dart';
 import 'package:flutter_app/src/models/medicine.dart';
 import 'package:flutter_app/src/models/medicine_type.dart';
 import 'package:flutter_app/src/ui/homepage/homepage.dart';
-import 'package:flutter_app/src/ui/success_screen/success_screen.dart';
+import 'package:flutter_app/success_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 

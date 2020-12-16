@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/lineUp.dart';
 import 'package:flutter_app/utility.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_app/src/ui/success_screen/success_screen.dart';
+import 'package:flutter_app/success_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -170,13 +170,26 @@ class _MyAppState extends State<TMPApp> {
         0,
         'scheduled title',
         'scheduled body',
-        tz.TZDateTime(tz.local, tz.TZDateTime.now(tz.local).year, tz.TZDateTime.now(tz.local).month, tz.TZDateTime.now(tz.local).day, tz.TZDateTime.now(tz.local).hour + 1),
+        tz.TZDateTime(tz.local, tz.TZDateTime.now(tz.local).year, tz.TZDateTime.now(tz.local).month, tz.TZDateTime.now(tz.local).day, tz.TZDateTime.now(tz.local).hour, tz.TZDateTime.now(tz.local).minute + 2),
         const NotificationDetails(
             android: AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description',
-        importance: Importance.max, priority: Priority.high)),
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime);
+                icon: 'app_icon',
+                largeIcon: const DrawableResourceAndroidBitmap('app_icon'),
+                fullScreenIntent: true,
+                enableVibration: true,
+                playSound: true,
+                showWhen: true,
+                showProgress: true,
+                timeoutAfter: 20,
+                enableLights: true,
+                color: const Color.fromARGB(255, 255, 0, 0),
+                ledColor: const Color.fromARGB(255, 255, 0, 0),
+                ledOnMs: 1000,
+                ledOffMs: 500,
+                importance: Importance.max, priority: Priority.high)),
+                androidAllowWhileIdle: true,
+                uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   Future<void> _configureLocalTimeZone() async {
