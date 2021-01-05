@@ -35,8 +35,29 @@ class _MyAppState extends State<TMPApp> {
     var initializationSettings = new InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+    _requestPermissions();
+  }
+
+  void _requestPermissions() {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        MacOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
   }
 
   @override
@@ -75,6 +96,25 @@ class _MyAppState extends State<TMPApp> {
                         },
                         child: Center(
                           child: Text("Confirm", style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          ),
+                        ),
+                      )
+                  ),
+                  Container(
+                      width: 220,
+                      height: 70,
+                      child: FlatButton(
+                        color: MyColors.eineLiebeDunkel,
+                        shape: StadiumBorder(),
+                        onPressed: () {
+                          _checkPendingNotificationRequests();
+                        },
+                        child: Center(
+                          child: Text("Test", style: TextStyle(
                             color: Colors.white,
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
@@ -170,22 +210,10 @@ class _MyAppState extends State<TMPApp> {
         0,
         'scheduled title',
         'scheduled body',
-        tz.TZDateTime(tz.local, tz.TZDateTime.now(tz.local).year, tz.TZDateTime.now(tz.local).month, tz.TZDateTime.now(tz.local).day, tz.TZDateTime.now(tz.local).hour, tz.TZDateTime.now(tz.local).minute + 2),
+        tz.TZDateTime(tz.local, tz.TZDateTime.now(tz.local).year, tz.TZDateTime.now(tz.local).month, tz.TZDateTime.now(tz.local).day, tz.TZDateTime.now(tz.local).hour, tz.TZDateTime.now(tz.local).minute, tz.TZDateTime.now(tz.local).second + 5),
         const NotificationDetails(
             android: AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description',
                 icon: 'app_icon',
-                largeIcon: const DrawableResourceAndroidBitmap('app_icon'),
-                fullScreenIntent: true,
-                enableVibration: true,
-                playSound: true,
-                showWhen: true,
-                showProgress: true,
-                timeoutAfter: 20,
-                enableLights: true,
-                color: const Color.fromARGB(255, 255, 0, 0),
-                ledColor: const Color.fromARGB(255, 255, 0, 0),
-                ledOnMs: 1000,
-                ledOffMs: 500,
                 importance: Importance.max, priority: Priority.high)),
                 androidAllowWhileIdle: true,
                 uiLocalNotificationDateInterpretation:
@@ -196,6 +224,41 @@ class _MyAppState extends State<TMPApp> {
     tz.initializeTimeZones();
     final String timeZoneName = "Europe/London";
     tz.setLocalLocation(tz.getLocation(timeZoneName));
+  }
+
+  Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker');
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, 'plain title', 'plain body', platformChannelSpecifics,
+        payload: 'item x');
+  }
+
+  Future<void> _checkPendingNotificationRequests() async {
+    final List<PendingNotificationRequest> pendingNotificationRequests =
+    await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content:
+        Text('${pendingNotificationRequests.length} pending notification '
+            'requests'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
 }

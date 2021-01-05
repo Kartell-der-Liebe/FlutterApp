@@ -110,8 +110,8 @@ class NewsPageState extends State<NewsPage> {
   body() {
     return isFeedEmpty()
         ? Center(
-      child: CircularProgressIndicator(),
-    )
+          child: CircularProgressIndicator(),
+        )
         : RefreshIndicator(
       key: _refreshKey,
       child: list(),

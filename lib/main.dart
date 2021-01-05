@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/food.dart';
 import 'package:flutter_app/googleMaps.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_app/lineUp.dart';
 import 'package:flutter_app/rss_reader.dart';
 import 'package:flutter_app/tmp.dart';
 import 'package:flutter_app/utility.dart';
+
 
 import 'information.dart';
 
@@ -40,6 +43,10 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Home Page'),
+      initialRoute: '/',
+      routes: {
+        '/LineUp': (context) => LineUpPage()
+      },
     );
   }
 }
