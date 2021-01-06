@@ -36,7 +36,7 @@ class Loader extends StatelessWidget  {
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5),
-                  child: Text(loadingTxt, style: TextStyle(color: Colors.black, fontSize: 18)),
+                  child: Text(loadingTxt, style: TextStyle(color: Colors.black, fontSize: 18, fontFamily: "EineLiebe")),
                 ),
               ],
             )

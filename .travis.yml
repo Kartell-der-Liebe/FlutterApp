@@ -43,7 +43,7 @@ matrix:
         - flutter doctor
 
       script:
-        - flutter -v build ios --no-codesign
+        - flutter build ios --no-codesign
 
 cache:
   directories:
