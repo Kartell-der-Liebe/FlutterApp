@@ -4,6 +4,8 @@ import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
+import 'Loader.dart';
+
 class NewsPage extends StatefulWidget {
   NewsPage({Key key, this.title}) : super(key: key);
 
@@ -110,7 +112,7 @@ class NewsPageState extends State<NewsPage> {
   body() {
     return isFeedEmpty()
         ? Center(
-          child: CircularProgressIndicator(),
+          child: Loader(loadingTxt: 'Content is loading...')
         )
         : RefreshIndicator(
       key: _refreshKey,
