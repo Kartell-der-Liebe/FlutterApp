@@ -6,12 +6,8 @@ on:
       - master
 
 jobs:
-  test:
-    name: Test on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+  build-android:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
@@ -25,3 +21,21 @@ jobs:
       - run: flutter doctor
       - run: flutter pub get
       - run: flutter build apk
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'beta'
+      - run: dart --version
+      - run: flutter --version
+      - run: flutter doctor
+      - run: flutter pub get
+      - run: flutter build ios --release --no-codesign
+
