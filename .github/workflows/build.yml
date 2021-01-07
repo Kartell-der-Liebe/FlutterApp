@@ -22,7 +22,6 @@ jobs:
       - run: flutter pub get
       - run: flutter build apk
 
-jobs:
   build-ios:
     runs-on: macos-latest
     steps:
