@@ -76,7 +76,7 @@ class TopContainer extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             blurRadius: 5,
-            color: Colors.grey[400],
+            color: Colors.grey[400]!,
             offset: Offset(0, 3.5),
           )
         ],
@@ -120,7 +120,7 @@ class TopContainer extends StatelessWidget {
                 padding: EdgeInsets.only(top: 16.0, bottom: 5 ),
                 child: Center(
                   child: Text(
-                    !snapshot.hasData ? '0' : snapshot.data.length.toString(),
+                    !snapshot.hasData ? '0' : snapshot.data!.length.toString(),
                     style: TextStyle(
                       fontFamily: "Neu",
                       fontSize: 28,
@@ -147,7 +147,7 @@ class BottomContainer extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
-        } else if (snapshot.data.length == 0) {
+        } else if (snapshot.data!.length == 0) {
           return Container(
             color: Color(0xFFF6F8FC),
             child: Center(
@@ -168,9 +168,9 @@ class BottomContainer extends StatelessWidget {
               padding: EdgeInsets.only(top: 12),
               gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return MedicineCard(snapshot.data[index]);
+                return MedicineCard(snapshot.data![index]);
               },
             ),
           );
@@ -188,7 +188,7 @@ class MedicineCard extends StatelessWidget {
   Hero makeIcon(double size) {
     if (medicine.medicineType == "Bottle") {
       return Hero(
-        tag: medicine.medicineName + medicine.medicineType,
+        tag: medicine.medicineName! + medicine.medicineType!,
         child: Icon(
           IconData(0xe900, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -197,7 +197,7 @@ class MedicineCard extends StatelessWidget {
       );
     } else if (medicine.medicineType == "Pill") {
       return Hero(
-        tag: medicine.medicineName + medicine.medicineType,
+        tag: medicine.medicineName! + medicine.medicineType!,
         child: Icon(
           IconData(0xe901, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -206,7 +206,7 @@ class MedicineCard extends StatelessWidget {
       );
     } else if (medicine.medicineType == "Syringe") {
       return Hero(
-        tag: medicine.medicineName + medicine.medicineType,
+        tag: medicine.medicineName! + medicine.medicineType!,
         child: Icon(
           IconData(0xe902, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -215,7 +215,7 @@ class MedicineCard extends StatelessWidget {
       );
     } else if (medicine.medicineType == "Tablet") {
       return Hero(
-        tag: medicine.medicineName + medicine.medicineType,
+        tag: medicine.medicineName! + medicine.medicineType!,
         child: Icon(
           IconData(0xe903, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -224,7 +224,7 @@ class MedicineCard extends StatelessWidget {
       );
     }
     return Hero(
-      tag: medicine.medicineName + medicine.medicineType,
+      tag: medicine.medicineName! + medicine.medicineType!,
       child: Icon(
         Icons.error,
         color: Color(0xFF3EB16F),
@@ -247,7 +247,7 @@ class MedicineCard extends StatelessWidget {
                   Animation<double> secondaryAnimation) {
                 return AnimatedBuilder(
                     animation: animation,
-                    builder: (BuildContext context, Widget child) {
+                    builder: (BuildContext context, Widget? child) {
                       return Opacity(
                         opacity: animation.value,
                         child: MedicineDetails(medicine),
@@ -269,11 +269,11 @@ class MedicineCard extends StatelessWidget {
               children: <Widget>[
                 makeIcon(50.0),
                 Hero(
-                  tag: medicine.medicineName,
+                  tag: medicine.medicineName!,
                   child: Material(
                     color: Colors.transparent,
                     child: Text(
-                      medicine.medicineName,
+                      medicine.medicineName!,
                       style: TextStyle(
                           fontSize: 22,
                           color: Color(0xFF3EB16F),

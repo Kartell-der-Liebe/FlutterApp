@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Loader extends StatelessWidget {
   Loader(
-      {Key key,
+      {Key? key,
       this.opacity = 0.5,
       this.dismissibles = false,
       this.color = Colors.black,

@@ -12,8 +12,8 @@ class GlobalBloc {
   // BehaviorSubject<Period> _selectedPeriod$;
   // BehaviorSubject<Period> get selectedPeriod$ => _selectedPeriod$.stream;
 
-  BehaviorSubject<List<Medicine>> _medicineList$;
-  BehaviorSubject<List<Medicine>> get medicineList$ => _medicineList$;
+  BehaviorSubject<List<Medicine>>? _medicineList$;
+  BehaviorSubject<List<Medicine>>? get medicineList$ => _medicineList$;
 
   GlobalBloc() {
     _medicineList$ = BehaviorSubject<List<Medicine>>.seeded([]);
@@ -36,13 +36,13 @@ class GlobalBloc {
     SharedPreferences sharedUser = await SharedPreferences.getInstance();
     List<String> medicineJsonList = [];
 
-    var blocList = _medicineList$.value;
+    var blocList = _medicineList$!.value;
     blocList.removeWhere(
         (medicine) => medicine.medicineName == tobeRemoved.medicineName);
 
-    for (int i = 0; i < (24 / tobeRemoved.interval).floor(); i++) {
+    for (int i = 0; i < (24 / tobeRemoved.interval!).floor(); i++) {
       flutterLocalNotificationsPlugin
-          .cancel(int.parse(tobeRemoved.notificationIDs[i]));
+          .cancel(int.parse(tobeRemoved.notificationIDs![i]));
     }
     if (blocList.length != 0) {
       for (var blocMedicine in blocList) {
@@ -51,45 +51,45 @@ class GlobalBloc {
       }
     }
     sharedUser.setStringList('medicines', medicineJsonList);
-    _medicineList$.add(blocList);
+    _medicineList$!.add(blocList);
   }
 
   Future updateMedicineList(Medicine newMedicine) async {
-    var blocList = _medicineList$.value;
+    var blocList = _medicineList$!.value;
     blocList.add(newMedicine);
-    _medicineList$.add(blocList);
+    _medicineList$!.add(blocList);
     Map<String, dynamic> tempMap = newMedicine.toJson();
     SharedPreferences sharedUser = await SharedPreferences.getInstance();
     String newMedicineJson = jsonEncode(tempMap);
-    List<String> medicineJsonList = [];
+    List<String>? medicineJsonList = [];
     if (sharedUser.getStringList('medicines') == null) {
       medicineJsonList.add(newMedicineJson);
     } else {
       medicineJsonList = sharedUser.getStringList('medicines');
-      medicineJsonList.add(newMedicineJson);
+      medicineJsonList!.add(newMedicineJson);
     }
     sharedUser.setStringList('medicines', medicineJsonList);
   }
 
   Future makeMedicineList() async {
     SharedPreferences sharedUser = await SharedPreferences.getInstance();
-    List<String> jsonList = sharedUser.getStringList('medicines');
+    List<String>? jsonList = sharedUser.getStringList('medicines');
     List<Medicine> prefList = [];
     if (jsonList == null) {
       return;
     } else {
       for (String jsonMedicine in jsonList) {
         Map userMap = jsonDecode(jsonMedicine);
-        Medicine tempMedicine = Medicine.fromJson(userMap);
+        Medicine tempMedicine = Medicine.fromJson(userMap as Map<String, dynamic>);
         prefList.add(tempMedicine);
       }
-      _medicineList$.add(prefList);
+      _medicineList$!.add(prefList);
     }
   }
 
   void dispose() {
     // _selectedDay$.close();
     // _selectedPeriod$.close();
-    _medicineList$.close();
+    _medicineList$!.close();
   }
 }

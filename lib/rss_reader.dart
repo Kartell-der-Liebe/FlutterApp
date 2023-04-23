@@ -7,10 +7,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'Loader.dart';
 
 class NewsPage extends StatefulWidget {
-  NewsPage({Key key, this.title}) : super(key: key);
+  NewsPage({Key? key, this.title}) : super(key: key);
 
   // Setting title for the action bar.
-  final String title;
+  final String? title;
 
   @override
   NewsPageState createState() => NewsPageState();
@@ -20,8 +20,8 @@ class NewsPageState extends State<NewsPage> {
   // Feed URL being used for the app. In this case is the Hacker News job feed.
   static final Uri FEED_URL = Uri.https('eineliebe.de', '/feed/');
 
-  RssFeed _feed; // RSS Feed Object
-  String _title; // Place holder for appbar title.
+  RssFeed? _feed; // RSS Feed Object
+  String? _title; // Place holder for appbar title.
 
   // Notification Strings
   static const String loadingMessage = 'Loading Feed...';
@@ -33,7 +33,7 @@ class NewsPageState extends State<NewsPage> {
   // class and the GloablKey class.
   // https://api.flutter.dev/flutter/widgets/GlobalKey-class.html
   // https://api.flutter.dev/flutter/material/RefreshIndicatorState-class.html
-  GlobalKey<RefreshIndicatorState> _refreshKey;
+  GlobalKey<RefreshIndicatorState>? _refreshKey;
 
   // Method to change the title as a way to inform the user what is going on
   // while retrieving the RSS data.
@@ -80,7 +80,7 @@ class NewsPageState extends State<NewsPage> {
   }
 
   // Method to get the RSS data from the provided URL in the FEED_URL variable.
-  Future<RssFeed> loadFeed() async {
+  Future<RssFeed?> loadFeed() async {
     try {
       final client = http.Client();
       final response = await client.get(FEED_URL);
@@ -103,7 +103,7 @@ class NewsPageState extends State<NewsPage> {
 
   // Method to check if the RSS feed is empty.
   isFeedEmpty() {
-    return null == _feed || null == _feed.items;
+    return null == _feed || null == _feed!.items;
   }
 
   // Method for the pull to refresh indicator and the actual ListView UI/Data.
@@ -122,7 +122,7 @@ class NewsPageState extends State<NewsPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_title),
+          title: Text(_title!),
         ),
         body: body(),
       ),
@@ -144,9 +144,9 @@ class NewsPageState extends State<NewsPage> {
             child: Container(
               child: ListView.builder(
                 padding: EdgeInsets.all(5.0),
-                itemCount: _feed.items.length,
+                itemCount: _feed!.items!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final item = _feed.items[index];
+                  final item = _feed!.items![index];
                   return Container(
                     margin: EdgeInsets.only(
                       bottom: 5.0,
@@ -172,7 +172,7 @@ class NewsPageState extends State<NewsPage> {
                       subtitle: subtitle(item.pubDate),
                       trailing: rightIcon(),
                       contentPadding: EdgeInsets.all(5.0),
-                      onTap: () => openFeed(item.link),
+                      onTap: () => openFeed(item.link!),
                     ),
                   );
                 },

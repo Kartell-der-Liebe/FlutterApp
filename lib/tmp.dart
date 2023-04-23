@@ -9,18 +9,18 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class TMPApp extends StatefulWidget {
-  final Act act;
+  final Act? act;
 
-  TMPApp({Key key, this.act}) : super(key: key);
+  TMPApp({Key? key, this.act}) : super(key: key);
   @override
   _MyAppState createState() => new _MyAppState(act: this.act);
 }
 
 class _MyAppState extends State<TMPApp> {
-  final Act act;
+  final Act? act;
 
   _MyAppState({this.act});
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   @override
   initState() {
@@ -62,7 +62,7 @@ class _MyAppState extends State<TMPApp> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Errinerung für ${act.name}"),
+        title: new Text("Errinerung für ${act!.name}"),
       ),
       body: new Center(
           child: ListView(
@@ -70,7 +70,7 @@ class _MyAppState extends State<TMPApp> {
           Container(
             margin: EdgeInsets.all(16),
             child: Text(
-              act.name,
+              act!.name!,
               textScaleFactor: 3,
               textAlign: TextAlign.center,
             ),
@@ -144,7 +144,7 @@ class _MyAppState extends State<TMPApp> {
       builder: (_) {
         return new AlertDialog(
           title: Text("PayLoad"),
-          content: Text("Payload : " + notificationResponse.payload),
+          content: Text("Payload : " + notificationResponse.payload!),
         );
       },
     );
@@ -225,7 +225,7 @@ class _MyAppState extends State<TMPApp> {
         platformChannelSpecifics);
   }
 
-  Future<void> _zonedScheduleNotification(Act act) async {
+  Future<void> _zonedScheduleNotification(Act? act) async {
     _configureLocalTimeZone();
     await flutterLocalNotificationsPlugin.zonedSchedule(
         0,

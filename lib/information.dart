@@ -4,7 +4,7 @@ import 'package:expandable/expandable.dart';
 import 'googleMaps.dart';
 
 class InformationPage extends StatefulWidget {
-  InformationPage({Key key, this.title}) : super(key: key);
+  InformationPage({Key? key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -15,7 +15,7 @@ class InformationPage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final String? title;
 
   @override
   InformationPageState createState() => InformationPageState();
@@ -35,7 +35,7 @@ class InformationPageState extends State<InformationPage> {
       length: 4,
       child: new Scaffold(
         appBar: new AppBar(
-          title: Text(widget.title),
+          title: Text(widget.title!),
           bottom: TabBar(
                 //labelColor: Colors.black,
                 //unselectedLabelColor: Colors.black38,

@@ -7,12 +7,12 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CalenderStart extends StatefulWidget {
-  CalenderStart({Key key, this.title}) : super(key: key);
+  CalenderStart({Key? key, this.title}) : super(key: key);
 
   // Main Page (Stateful)
 
   // Page title
-  final String title;
+  final String? title;
 
   @override
   CalenderStartState createState() => CalenderStartState();
@@ -22,9 +22,9 @@ class CalenderStartState extends State<CalenderStart> {
   String statusString = ''; //Status string displayed to user
 
   //Booleans to track which mmaEvents to Query
-  bool queryUFC = true;
-  bool queryBellator = true;
-  bool queryOneFC = true;
+  bool? queryUFC = true;
+  bool? queryBellator = true;
+  bool? queryOneFC = true;
 
   //Calendar Variables
   bool deleted = false;
@@ -33,7 +33,7 @@ class CalenderStartState extends State<CalenderStart> {
   String _currentCalendarID = '';
   DeviceCalendarPlugin _deviceCalendarPlugin = new DeviceCalendarPlugin();
 
-  bool _setCalendarCallback(
+  bool? _setCalendarCallback(
       String calendarID, String calendarName, DeviceCalendarPlugin deviceCal) {
     //Calendar Callback Function used by Calendar Page
     //Calendar Page will call the callback to provide calendar info needed
@@ -169,13 +169,13 @@ class CalenderStartState extends State<CalenderStart> {
       //correct header
       deleted = delete;
     });
-    if (queryUFC) {
+    if (queryUFC!) {
       _queryAndParseWebsiteUFCBellator('ufc', delete);
     }
-    if (queryBellator) {
+    if (queryBellator!) {
       _queryAndParseWebsiteUFCBellator('bellator', delete);
     }
-    if (queryOneFC) {
+    if (queryOneFC!) {
       _queryAndParseWebsiteOneFC(delete);
     }
   }
@@ -202,10 +202,10 @@ class CalenderStartState extends State<CalenderStart> {
         final eventTime = mmaEvent.eventDate;
         final eventToCreate = new Event(_currentCalendarID);
         eventToCreate.title = mmaEvent.eventName;
-        eventToCreate.start = eventTime;
+        eventToCreate.start = eventTime as TZDateTime?;
         eventToCreate.description = mmaEvent.eventDetails.toString();
-        String mmaEventId = prefs.getString(mmaEvent.getPrefKey());
-        bool previouslyDeleted = prefs.getBool(mmaEvent.getPrefBoolKey());
+        String? mmaEventId = prefs.getString(mmaEvent.getPrefKey());
+        bool? previouslyDeleted = prefs.getBool(mmaEvent.getPrefBoolKey());
         if (mmaEventId != null) {
           if (previouslyDeleted != null && !previouslyDeleted) {
             //If the event already has an ID (was already added) and has not
@@ -213,12 +213,13 @@ class CalenderStartState extends State<CalenderStart> {
             eventToCreate.eventId = mmaEventId;
           }
         }
-        eventToCreate.end = eventTime.add(new Duration(hours: 3));
+        eventToCreate.end =
+            eventTime.add(new Duration(hours: 3)) as TZDateTime?;
         final createEventResult =
-            await _deviceCalendarPlugin.createOrUpdateEvent(eventToCreate);
+            (await _deviceCalendarPlugin.createOrUpdateEvent(eventToCreate))!;
         if (createEventResult.isSuccess &&
             (createEventResult.data?.isNotEmpty ?? false)) {
-          prefs.setString(mmaEvent.getPrefKey(), createEventResult.data);
+          prefs.setString(mmaEvent.getPrefKey(), createEventResult.data!);
           fightString.write(mmaEvent.eventName + '\n');
         }
       }
@@ -249,7 +250,7 @@ class CalenderStartState extends State<CalenderStart> {
       // (i.e. ensure it is properly formatted)
       if (mmaEvent.readyForCalendar) {
         final eventToCreate = new Event(_currentCalendarID);
-        String mmaEventId = prefs.getString(mmaEvent.getPrefKey());
+        String? mmaEventId = prefs.getString(mmaEvent.getPrefKey());
         if (mmaEventId != null) {
           eventToCreate.eventId = mmaEventId;
           final createEventResult = await _deviceCalendarPlugin.deleteEvent(
@@ -302,7 +303,7 @@ class CalenderStartState extends State<CalenderStart> {
 
     for (var link in fightLinks) {
       String title = link.text;
-      String href = link.attributes['href'];
+      String? href = link.attributes['href'];
       if (title != null && href != null && href.contains('fight-card')) {
         //If link contains 'fight card', link is referencing the event name
         //Create a new event with the event name
