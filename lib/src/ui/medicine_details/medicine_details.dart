@@ -14,7 +14,7 @@ class MedicineDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -51,9 +51,11 @@ class MedicineDetails extends StatelessWidget {
                 child: Container(
                   width: 280,
                   height: 70,
-                  child: FlatButton(
-                    color: Color(0xFF3EB16F),
-                    shape: StadiumBorder(),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF3EB16F),
+                      shape: StadiumBorder(),
+                    ),
                     onPressed: () {
                       openAlertBox(context, _globalBloc);
                     },

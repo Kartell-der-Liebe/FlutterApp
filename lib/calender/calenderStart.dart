@@ -50,13 +50,13 @@ class CalenderStartState extends State<CalenderStart> {
     //Returns a calendar button that displays 'Select Calendar' or Returns a
     // Calendar Page if the button was pressed
     if (!calendarSelected) {
-      return new FlatButton.icon(
+      return new TextButton.icon(
           icon: Icon(
             Icons.calendar_today,
             color: Colors.amber[600],
           ),
           label: Text(calendarButtonText,
-              style: Theme.of(context).textTheme.body1),
+              style: Theme.of(context).textTheme.bodyLarge),
           onPressed: () {
             setState(() {
               calendarSelected = true;
@@ -72,23 +72,25 @@ class CalenderStartState extends State<CalenderStart> {
     // a button that is not null and can be used to query fights from the web
     // and add them to the user's selected calendar
     if (_currentCalendarID != '') {
-      return new FlatButton.icon(
-          onPressed: (){_queryMMAWebsite(false);},
+      return new TextButton.icon(
+          onPressed: () {
+            _queryMMAWebsite(false);
+          },
           icon: Icon(
             Icons.cached,
             color: Colors.amber[600],
           ),
           label: Text('Load Fights and Add to Calendar',
-              style: Theme.of(context).textTheme.body1));
+              style: Theme.of(context).textTheme.bodyLarge));
     } else {
-      return new FlatButton.icon(
+      return new TextButton.icon(
           onPressed: null,
           icon: Icon(
             Icons.cached,
             color: const Color(0xff979799),
           ),
           label: Text('Load Fights and Add to Calendar',
-              style: Theme.of(context).textTheme.subhead));
+              style: Theme.of(context).textTheme.titleMedium));
     }
   }
 
@@ -97,32 +99,36 @@ class CalenderStartState extends State<CalenderStart> {
     // a button that is not null and can be used to query fights from the web
     // and delete them from the user's selected calendar
     if (_currentCalendarID != '') {
-      return new FlatButton.icon(
-          onPressed: (){_queryMMAWebsite(true);},
+      return new TextButton.icon(
+          onPressed: () {
+            _queryMMAWebsite(true);
+          },
           icon: Icon(
             Icons.delete,
             color: Colors.amber[600],
           ),
           label: Text('Delete Fights From Calendar',
-              style: Theme.of(context).textTheme.body1));
+              style: Theme.of(context).textTheme.bodyLarge));
     } else {
-      return new FlatButton.icon(
+      return new TextButton.icon(
           onPressed: null,
           icon: Icon(
             Icons.delete,
             color: const Color(0xff979799),
           ),
           label: Text('Delete Fights From Calendar',
-              style: Theme.of(context).textTheme.subhead));
+              style: Theme.of(context).textTheme.titleMedium));
     }
   }
 
-  Text statusMessageHeader(){
-    if(statusString != ''){
-      if(deleted){
-        return new Text('Events Deleted in Calendar:\n', style: Theme.of(context).textTheme.body2 );
+  Text statusMessageHeader() {
+    if (statusString != '') {
+      if (deleted) {
+        return new Text('Events Deleted in Calendar:\n',
+            style: Theme.of(context).textTheme.bodyMedium);
       } else {
-        return new Text('Events Added/Updated in Calendar:\n', style: Theme.of(context).textTheme.body2 );
+        return new Text('Events Added/Updated in Calendar:\n',
+            style: Theme.of(context).textTheme.bodyMedium);
       }
     } else {
       return new Text('');
@@ -201,7 +207,7 @@ class CalenderStartState extends State<CalenderStart> {
         String mmaEventId = prefs.getString(mmaEvent.getPrefKey());
         bool previouslyDeleted = prefs.getBool(mmaEvent.getPrefBoolKey());
         if (mmaEventId != null) {
-          if (previouslyDeleted != null && !previouslyDeleted){
+          if (previouslyDeleted != null && !previouslyDeleted) {
             //If the event already has an ID (was already added) and has not
             //been previously deleted, set the ID on the event to update
             eventToCreate.eventId = mmaEventId;
@@ -209,7 +215,7 @@ class CalenderStartState extends State<CalenderStart> {
         }
         eventToCreate.end = eventTime.add(new Duration(hours: 3));
         final createEventResult =
-        await _deviceCalendarPlugin.createOrUpdateEvent(eventToCreate);
+            await _deviceCalendarPlugin.createOrUpdateEvent(eventToCreate);
         if (createEventResult.isSuccess &&
             (createEventResult.data?.isNotEmpty ?? false)) {
           prefs.setString(mmaEvent.getPrefKey(), createEventResult.data);
@@ -246,8 +252,8 @@ class CalenderStartState extends State<CalenderStart> {
         String mmaEventId = prefs.getString(mmaEvent.getPrefKey());
         if (mmaEventId != null) {
           eventToCreate.eventId = mmaEventId;
-          final createEventResult =
-          await _deviceCalendarPlugin.deleteEvent(_currentCalendarID, eventToCreate.eventId);
+          final createEventResult = await _deviceCalendarPlugin.deleteEvent(
+              _currentCalendarID, eventToCreate.eventId);
           if (createEventResult.isSuccess) {
             fightString.write(mmaEvent.eventName + '\n');
             //Set bool pref indicating event has been previously deleted
@@ -268,9 +274,8 @@ class CalenderStartState extends State<CalenderStart> {
     //Different event types are queried depending on which checkboxes user has selected from main page UI
 
     var client = Client();
-    StringBuffer url = new StringBuffer('https://www.mmafighting.com/schedule');
-    url.write('/' + eventType);
-    Response response = await client.get(url.toString());
+    var uri = Uri.https('www.mmafighting.com', '/schedule/' + eventType);
+    Response response = await client.get(uri);
 
     if (response.statusCode != 200) {
       //If HTTP OK response is not received, return empty body and let user
@@ -316,7 +321,7 @@ class CalenderStartState extends State<CalenderStart> {
     }
 
     //Check if events are being deleted or added/updated
-    if(!delete){
+    if (!delete) {
       //Add the queried events to the user's calendar
       _addEventsToCalendar(mmaEvents);
     } else {
@@ -331,8 +336,8 @@ class CalenderStartState extends State<CalenderStart> {
     //Method to query onefc.com parse data for upcoming MMA Events
 
     var client = Client();
-    StringBuffer url = new StringBuffer('https://www.onefc.com/events/');
-    Response response = await client.get(url.toString());
+    var uri = Uri.https('www.onefc.com', '/events/');
+    Response response = await client.get(uri);
 
     if (response.statusCode != 200) {
       //If HTTP OK response is not received, return empty body and let user
@@ -365,7 +370,7 @@ class CalenderStartState extends State<CalenderStart> {
 
     for (var link in fightLinks) {
       String title = link.text;
-      if (title != null ) {
+      if (title != null) {
         //Create a new event with the event name
         var mmaEvent = new MMAEvent(title);
         if (eventDateIterator.moveNext()) {
@@ -374,26 +379,24 @@ class CalenderStartState extends State<CalenderStart> {
           //(in the same order)
           //Move the iterator to the next date and add the date to the MMA Event
           mmaEvent.addDateOneFC(eventDateIterator.current.text);
-          if(locationIterator.moveNext()){
+          if (locationIterator.moveNext()) {
             //Move the iterator to the next location and add to the MMA Eevnt
             mmaEvent.addDetails(locationIterator.current.text);
           }
         } else {
           break;
         }
-
       }
     }
 
     //Check if events are being deleted or added/updated
-    if(!delete){
+    if (!delete) {
       //Add the queried events to the user's calendar
       _addEventsToCalendar(mmaEvents);
     } else {
       //Delete events from the user's calendar
       _deleteEventsFromCalendar(mmaEvents);
     }
-
 
     return response.body;
   }
@@ -408,9 +411,9 @@ class CalenderStartState extends State<CalenderStart> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-      ),
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -436,18 +439,18 @@ class CalenderStartState extends State<CalenderStart> {
               children: <Widget>[
                 CheckboxListTile(
                     value: queryUFC,
-                    title:
-                    Text('UFC', style: Theme.of(context).textTheme.body1),
+                    title: Text('UFC',
+                        style: Theme.of(context).textTheme.bodyLarge),
                     onChanged: _toggleQueryUFC),
                 CheckboxListTile(
                     value: queryBellator,
                     title: Text('Bellator',
-                        style: Theme.of(context).textTheme.body1),
+                        style: Theme.of(context).textTheme.bodyLarge),
                     onChanged: _toggleQueryBellator),
                 CheckboxListTile(
                     value: queryOneFC,
                     title: Text('One FC',
-                        style: Theme.of(context).textTheme.body1),
+                        style: Theme.of(context).textTheme.bodyLarge),
                     onChanged: _toggleQueryOneFC),
               ],
             ),
@@ -459,7 +462,7 @@ class CalenderStartState extends State<CalenderStart> {
               child: SingleChildScrollView(
                 child: Text(
                   statusString,
-                  style: Theme.of(context).textTheme.body1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
             ),

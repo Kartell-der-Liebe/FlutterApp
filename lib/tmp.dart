@@ -9,7 +9,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class TMPApp extends StatefulWidget {
-
   final Act act;
 
   TMPApp({Key key, this.act}) : super(key: key);
@@ -18,7 +17,6 @@ class TMPApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<TMPApp> {
-
   final Act act;
 
   _MyAppState({this.act});
@@ -30,114 +28,123 @@ class _MyAppState extends State<TMPApp> {
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('app_icon');
-    var initializationSettingsIOS = new IOSInitializationSettings();
+        new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new DarwinInitializationSettings();
     var initializationSettings = new InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+        onDidReceiveNotificationResponse: onSelectNotification);
     _requestPermissions();
   }
 
   void _requestPermissions() {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        MacOSFlutterLocalNotificationsPlugin>()
+            MacOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text("Errinerung für ${act.name}"),
-        ),
-        body: new Center(
+      appBar: new AppBar(
+        title: new Text("Errinerung für ${act.name}"),
+      ),
+      body: new Center(
           child: ListView(
-            children: [
+        children: [
+          Container(
+            margin: EdgeInsets.all(16),
+            child: Text(
+              act.name,
+              textScaleFactor: 3,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
               Container(
-                margin: EdgeInsets.all(16),
-                child: Text(act.name, textScaleFactor: 3, textAlign: TextAlign.center,),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Container(
-                      width: 220,
-                      height: 70,
-                      child: FlatButton(
-                        color: MyColors.eineLiebeDunkel,
-                        shape: StadiumBorder(),
-                        onPressed: () {
-                          _zonedScheduleNotification(act);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                              builder: (BuildContext context) {
-                              return SuccessScreen();
-                              },
-                          ),
-                          );
-                        },
-                        child: Center(
-                          child: Text("Confirm", style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          ),
+                  width: 220,
+                  height: 70,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: MyColors.eineLiebeDunkel,
+                      shape: StadiumBorder(),
+                    ),
+                    onPressed: () {
+                      _zonedScheduleNotification(act);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return SuccessScreen();
+                          },
                         ),
-                      )
-                  ),
-                  Container(
-                      width: 220,
-                      height: 70,
-                      child: FlatButton(
-                        color: MyColors.eineLiebeDunkel,
-                        shape: StadiumBorder(),
-                        onPressed: () {
-                          _checkPendingNotificationRequests();
-                        },
-                        child: Center(
-                          child: Text("Test", style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          ),
+                      );
+                    },
+                    child: Center(
+                      child: Text(
+                        "Confirm",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
                         ),
-                      )
-                  ),
-                ],
-              ),
+                      ),
+                    ),
+                  )),
+              Container(
+                  width: 220,
+                  height: 70,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: MyColors.eineLiebeDunkel,
+                      shape: StadiumBorder(),
+                    ),
+                    onPressed: () {
+                      _checkPendingNotificationRequests();
+                    },
+                    child: Center(
+                      child: Text(
+                        "Test",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  )),
             ],
-          )
-        ),
+          ),
+        ],
+      )),
     );
   }
 
-  Future onSelectNotification(String payload) async {
+  void onSelectNotification(NotificationResponse notificationResponse) {
     showDialog(
       context: context,
       builder: (_) {
         return new AlertDialog(
           title: Text("PayLoad"),
-          content: Text("Payload : $payload"),
+          content: Text("Payload : " + notificationResponse.payload),
         );
       },
     );
@@ -145,12 +152,18 @@ class _MyAppState extends State<TMPApp> {
 
   Future _showNotificationWithoutSound() async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        playSound: false, importance: Importance.max, priority: Priority.high);
+      'your channel id',
+      'your channel name',
+      channelDescription: 'your channel description',
+      playSound: false,
+      importance: Importance.max,
+      priority: Priority.high,
+    );
     var iOSPlatformChannelSpecifics =
-    new IOSNotificationDetails(presentSound: false);
+        new DarwinNotificationDetails(presentSound: false);
     var platformChannelSpecifics = new NotificationDetails(
-        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
       0,
       'New Post',
@@ -162,11 +175,16 @@ class _MyAppState extends State<TMPApp> {
 
   Future _showNotificationWithDefaultSound() async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.max, priority: Priority.high);
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+      'your channel id',
+      'your channel name',
+      channelDescription: 'your channel description',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    var iOSPlatformChannelSpecifics = new DarwinNotificationDetails();
     var platformChannelSpecifics = new NotificationDetails(
-        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
       0,
       'New Post',
@@ -184,19 +202,22 @@ class _MyAppState extends State<TMPApp> {
     vibrationPattern[3] = 2000;
 
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails('other custom channel id',
-        'other custom channel name', 'other custom channel description',
-        icon: 'app_icon',
-        largeIcon: const DrawableResourceAndroidBitmap('app_icon'),
-        vibrationPattern: vibrationPattern,
-        enableLights: true,
-        color: const Color.fromARGB(255, 255, 0, 0),
-        ledColor: const Color.fromARGB(255, 255, 0, 0),
-        ledOnMs: 1000,
-        ledOffMs: 500);
+        AndroidNotificationDetails(
+      'other custom channel id',
+      'other custom channel name',
+      channelDescription: 'other custom channel description',
+      icon: 'app_icon',
+      largeIcon: const DrawableResourceAndroidBitmap('app_icon'),
+      vibrationPattern: vibrationPattern,
+      enableLights: true,
+      color: const Color.fromARGB(255, 255, 0, 0),
+      ledColor: const Color.fromARGB(255, 255, 0, 0),
+      ledOnMs: 1000,
+      ledOffMs: 500,
+    );
 
     final NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+        NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
         0,
         'title of notification with custom vibration pattern, LED and icon',
@@ -210,14 +231,26 @@ class _MyAppState extends State<TMPApp> {
         0,
         'scheduled title',
         'scheduled body',
-        tz.TZDateTime(tz.local, tz.TZDateTime.now(tz.local).year, tz.TZDateTime.now(tz.local).month, tz.TZDateTime.now(tz.local).day, tz.TZDateTime.now(tz.local).hour, tz.TZDateTime.now(tz.local).minute, tz.TZDateTime.now(tz.local).second + 5),
+        tz.TZDateTime(
+            tz.local,
+            tz.TZDateTime.now(tz.local).year,
+            tz.TZDateTime.now(tz.local).month,
+            tz.TZDateTime.now(tz.local).day,
+            tz.TZDateTime.now(tz.local).hour,
+            tz.TZDateTime.now(tz.local).minute,
+            tz.TZDateTime.now(tz.local).second + 5),
         const NotificationDetails(
-            android: AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description',
-                icon: 'app_icon',
-                importance: Importance.max, priority: Priority.high)),
-                androidAllowWhileIdle: true,
-                uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime);
+            android: AndroidNotificationDetails(
+          'your channel id',
+          'your channel name',
+          channelDescription: 'your channel description',
+          icon: 'app_icon',
+          importance: Importance.max,
+          priority: Priority.high,
+        )),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   Future<void> _configureLocalTimeZone() async {
@@ -228,13 +261,16 @@ class _MyAppState extends State<TMPApp> {
 
   Future<void> _showNotification() async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker');
+        AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      channelDescription: 'your channel description',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
     const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+        NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
         0, 'plain title', 'plain body', platformChannelSpecifics,
         payload: 'item x');
@@ -242,15 +278,15 @@ class _MyAppState extends State<TMPApp> {
 
   Future<void> _checkPendingNotificationRequests() async {
     final List<PendingNotificationRequest> pendingNotificationRequests =
-    await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         content:
-        Text('${pendingNotificationRequests.length} pending notification '
-            'requests'),
+            Text('${pendingNotificationRequests.length} pending notification '
+                'requests'),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -260,5 +296,4 @@ class _MyAppState extends State<TMPApp> {
       ),
     );
   }
-
 }

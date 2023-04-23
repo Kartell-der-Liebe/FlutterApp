@@ -49,7 +49,7 @@ class _NewEntryState extends State<NewEntry> {
 
     return Scaffold(
       key: _scaffoldKey,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -175,9 +175,11 @@ class _NewEntryState extends State<NewEntry> {
                 child: Container(
                   width: 220,
                   height: 70,
-                  child: FlatButton(
-                    color: Color(0xFF3EB16F),
-                    shape: StadiumBorder(),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF3EB16F),
+                      shape: StadiumBorder(),
+                    ),
                     child: Center(
                       child: Text(
                         "Confirm",
@@ -292,7 +294,7 @@ class _NewEntryState extends State<NewEntry> {
   }
 
   void displayError(String error) {
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(_scaffoldKey.currentContext).showSnackBar(
       SnackBar(
         backgroundColor: Colors.red,
         content: Text(error),
@@ -313,18 +315,18 @@ class _NewEntryState extends State<NewEntry> {
   initializeNotifications() async {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
-    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettingsIOS = DarwinInitializationSettings();
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+        onDidReceiveNotificationResponse: onSelectNotification);
   }
 
-  Future onSelectNotification(String payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: ' + payload);
+  void onSelectNotification(NotificationResponse notificationResponse) {
+    if (notificationResponse.payload != null) {
+      debugPrint('notification payload: ' + notificationResponse.payload);
     }
-    await Navigator.push(
+    Navigator.push(
       context,
       new MaterialPageRoute(builder: (context) => HomePage()),
     );
@@ -338,16 +340,17 @@ class _NewEntryState extends State<NewEntry> {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'repeatDailyAtTime channel id',
       'repeatDailyAtTime channel name',
-      'repeatDailyAtTime description',
+      channelDescription: 'repeatDailyAtTime description',
       importance: Importance.max,
       ledColor: Color(0xFF3EB16F),
       ledOffMs: 1000,
       ledOnMs: 1000,
       enableLights: true,
     );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
 
     for (int i = 0; i < (24 / medicine.interval).floor(); i++) {
       if ((hour + (medicine.interval * i) > 23)) {
@@ -480,9 +483,11 @@ class _SelectTimeState extends State<SelectTime> {
       height: 60,
       child: Padding(
         padding: EdgeInsets.only(top: 10.0, bottom: 4),
-        child: FlatButton(
-          color: Color(0xFF3EB16F),
-          shape: StadiumBorder(),
+        child: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: Color(0xFF3EB16F),
+            shape: StadiumBorder(),
+          ),
           onPressed: () {
             _selectTime(context);
           },
