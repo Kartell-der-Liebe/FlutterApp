@@ -196,7 +196,7 @@ class NewsPageState extends State<NewsPage> {
   // Method that returns the Text Widget for the subtitle of our RSS data.
   subtitle(subTitle) {
     return Text(
-      subTitle,
+      subTitle.toString(),
       style: TextStyle(
           fontSize: 15.0, fontWeight: FontWeight.w300, color: Colors.black38),
       maxLines: 1,
