@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Loader extends StatelessWidget  {
-  Loader({Key key, this.opacity: 0.5,
+  Loader({super.key, this.opacity: 0.5,
     this.dismissibles: false, this.color: Colors.black, this.loadingTxt: 'Loading...'
-  }) : super(key: key);
+  });
 
   final double opacity;
   final bool dismissibles;
