@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'Loader.dart';
 
 class NewsPage extends StatefulWidget {
-  NewsPage({Key key, this.title}) : super(key: key);
+  NewsPage({super.key, required this.title});
 
   // Setting title for the action bar.
   final String title;
@@ -20,8 +20,8 @@ class NewsPageState extends State<NewsPage> {
   // Feed URL being used for the app. In this case is the Hacker News job feed.
   static const String FEED_URL = 'https://eineliebe.de/feed/';
 
-  RssFeed _feed; // RSS Feed Object
-  String _title; // Place holder for appbar title.
+  late RssFeed _feed; // RSS Feed Object
+  late String _title; // Place holder for appbar title.
 
   // Notification Strings
   static const String loadingMessage = 'Loading Feed...';
@@ -33,7 +33,7 @@ class NewsPageState extends State<NewsPage> {
   // class and the GloablKey class.
   // https://api.flutter.dev/flutter/widgets/GlobalKey-class.html
   // https://api.flutter.dev/flutter/material/RefreshIndicatorState-class.html
-  GlobalKey<RefreshIndicatorState> _refreshKey;
+  late GlobalKey<RefreshIndicatorState> _refreshKey;
 
   // Method to change the title as a way to inform the user what is going on
   // while retrieving the RSS data.
@@ -67,9 +67,7 @@ class NewsPageState extends State<NewsPage> {
   load() async {
     updateTitle(loadingMessage);
     loadFeed().then((result) {
-      if (null == result || result
-          .toString()
-          .isEmpty) {
+      if (null == result || result.toString().isEmpty) {
         // Notify user of error.
         updateTitle(feedLoadErrorMessage);
         return;
@@ -82,10 +80,10 @@ class NewsPageState extends State<NewsPage> {
   }
 
   // Method to get the RSS data from the provided URL in the FEED_URL variable.
-  Future<RssFeed> loadFeed() async {
+  Future<RssFeed?> loadFeed() async {
     try {
       final client = http.Client();
-      final response = await client.get(FEED_URL);
+      final response = await client.get(FEED_URL as Uri);
       return RssFeed.parse(response.body);
     } catch (e) {
       // handle any exceptions here
@@ -111,14 +109,12 @@ class NewsPageState extends State<NewsPage> {
   // Method for the pull to refresh indicator and the actual ListView UI/Data.
   body() {
     return isFeedEmpty()
-        ? Center(
-          child: Loader(loadingTxt: 'Content is loading...')
-        )
+        ? Center(child: Loader(loadingTxt: 'Content is loading...'))
         : RefreshIndicator(
-      key: _refreshKey,
-      child: list(),
-      onRefresh: () => load(),
-    );
+            key: _refreshKey,
+            child: list(),
+            onRefresh: () => load(),
+          );
   }
 
   @override
@@ -148,9 +144,9 @@ class NewsPageState extends State<NewsPage> {
             child: Container(
               child: ListView.builder(
                 padding: EdgeInsets.all(5.0),
-                itemCount: _feed.items.length,
+                itemCount: _feed.items?.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final item = _feed.items[index];
+                  final item = _feed.items![index];
                   return Container(
                     margin: EdgeInsets.only(
                       bottom: 5.0,
@@ -161,8 +157,7 @@ class NewsPageState extends State<NewsPage> {
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10)
-                      ),
+                          bottomRight: Radius.circular(10)),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -177,7 +172,7 @@ class NewsPageState extends State<NewsPage> {
                       subtitle: subtitle(item.pubDate),
                       trailing: rightIcon(),
                       contentPadding: EdgeInsets.all(5.0),
-                      onTap: () => openFeed(item.link),
+                      onTap: () => openFeed(item.link!),
                     ),
                   );
                 },
@@ -192,9 +187,7 @@ class NewsPageState extends State<NewsPage> {
     return Text(
       title,
       style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.w500,
-          color: Colors.black38),
+          fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black38),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
@@ -205,9 +198,7 @@ class NewsPageState extends State<NewsPage> {
     return Text(
       subTitle,
       style: TextStyle(
-          fontSize: 15.0,
-          fontWeight: FontWeight.w300,
-          color: Colors.black38),
+          fontSize: 15.0, fontWeight: FontWeight.w300, color: Colors.black38),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );

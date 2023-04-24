@@ -4,7 +4,7 @@ import 'package:expandable/expandable.dart';
 import 'googleMaps.dart';
 
 class InformationPage extends StatefulWidget {
-  InformationPage({Key key, this.title}) : super(key: key);
+  const InformationPage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -31,19 +31,19 @@ class InformationPageState extends State<InformationPage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return new DefaultTabController(
+    return DefaultTabController(
       length: 4,
-      child: new Scaffold(
-        appBar: new AppBar(
+      child: Scaffold(
+        appBar: AppBar(
           title: Text(widget.title),
           bottom: TabBar(
                 //labelColor: Colors.black,
                 //unselectedLabelColor: Colors.black38,
                 tabs: [
-                  new Tab(text: "Info"),
-                  new Tab(text: "Anreise",),
-                  new Tab(text: "Camping"),
-                  new Tab(text: "Unter 18",)
+                  Tab(text: "Info"),
+                  Tab(text: "Anreise",),
+                  Tab(text: "Camping"),
+                  Tab(text: "Unter 18",)
                 ],
               ),
         ),

@@ -5,19 +5,17 @@ import 'package:flutter_app/food.dart';
 import 'package:flutter_app/googleMaps.dart';
 import 'package:flutter_app/lineUp.dart';
 import 'package:flutter_app/rss_reader.dart';
-import 'package:flutter_app/tmp.dart';
 import 'package:flutter_app/utility.dart';
 
 
 import 'information.dart';
 
 void main() {
-  /*PushNotificationsManager pushNotificationsManager = new PushNotificationsManager();
-  pushNotificationsManager.init();*/
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -45,14 +43,14 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(title: 'Home Page'),
       initialRoute: '/',
       routes: {
-        '/LineUp': (context) => LineUpPage()
+        '/LineUp': (context) => LineUpPage(title: '',)
       },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -282,7 +280,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 leading: Icon(Icons.fiber_new),
                 title: Text("News"),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => NewsPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => NewsPage(title: '',)));
                 },
               ),
             ],
