@@ -4,7 +4,7 @@ class MMAEvent {
 
   bool readyForCalendar = true;
   String eventName;
-  DateTime eventDate;
+  late DateTime eventDate;
   StringBuffer eventDetails = new StringBuffer(''); //StringBuffer to display list of fights
 
   MMAEvent(this.eventName);

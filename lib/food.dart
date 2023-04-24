@@ -7,9 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class FoodPage extends StatelessWidget {
-  final String title;
+  final String? title;
 
-  FoodPage({Key key, this.title}) : super(key: key);
+  FoodPage({Key? key, this.title}) : super(key: key);
 
 
   @override
@@ -41,7 +41,7 @@ class FoodPage extends StatelessWidget {
                             return Center(child: CircularProgressIndicator());
                             break;
                           default:
-                            List<Food> food = parseJosnAct(snapshot.data.toString());
+                            List<Food>? food = parseJosnAct(snapshot.data.toString());
                             return new FoodList(food: food);
                         }
                       }
@@ -72,7 +72,7 @@ class FoodPage extends StatelessWidget {
     );
   }
 
-  List<Food> parseJosnAct(String response) {
+  List<Food>? parseJosnAct(String response) {
     if(response==null){
       return [];
     }
@@ -82,30 +82,30 @@ class FoodPage extends StatelessWidget {
 }
 
 class Food{
-  final String name;
-  final String image;
-  final String link;
+  final String? name;
+  final String? image;
+  final String? link;
 
   Food({this.name, this.image, this.link});
 
   factory Food.fromJson(Map<String, dynamic> json){
     return Food(
-        name: json['name'] as String,
-        image: json['image'] as String,
-        link: json['link'] as String
+        name: json['name'] as String?,
+        image: json['image'] as String?,
+        link: json['link'] as String?
     );
   }
 }
 
 class FoodList extends StatelessWidget {
-  final List<Food> food;
-  FoodList({Key key, this.food}) : super(key: key);
+  final List<Food>? food;
+  FoodList({Key? key, this.food}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: food == null ? 0 : food.length,
+        itemCount: food == null ? 0 : food!.length,
         itemBuilder: (BuildContext context, int index) {
           return
             new Card(
@@ -117,14 +117,14 @@ class FoodList extends StatelessWidget {
                   margin: new EdgeInsets.only(bottom: 4),
                   decoration: new BoxDecoration(
                     image: new DecorationImage(
-                      image: new AssetImage(food[index].image),
+                      image: new AssetImage(food![index].image!),
                       fit: BoxFit.cover,
                     ),
                   ),
                   child: new Stack(
                     children: <Widget>[
                       new Center(
-                        child: new Text(food[index].name,style: new TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0,)
+                        child: new Text(food![index].name!,style: new TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0,)
                         ),
                       ),
                     ],

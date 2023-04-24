@@ -14,7 +14,7 @@ class MedicineDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -51,9 +51,11 @@ class MedicineDetails extends StatelessWidget {
                 child: Container(
                   width: 280,
                   height: 70,
-                  child: FlatButton(
-                    color: Color(0xFF3EB16F),
-                    shape: StadiumBorder(),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF3EB16F),
+                      shape: StadiumBorder(),
+                    ),
                     onPressed: () {
                       openAlertBox(context, _globalBloc);
                     },
@@ -178,14 +180,14 @@ class MainSection extends StatelessWidget {
   final Medicine medicine;
 
   MainSection({
-    Key key,
-    @required this.medicine,
+    Key? key,
+    required this.medicine,
   }) : super(key: key);
 
   Hero makeIcon(double size) {
     if (medicine.medicineType == "Bottle") {
       return Hero(
-        tag: medicine.medicineName + medicine.medicineType,
+        tag: medicine.medicineName! + medicine.medicineType!,
         child: Icon(
           IconData(0xe900, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -194,7 +196,7 @@ class MainSection extends StatelessWidget {
       );
     } else if (medicine.medicineType == "Pill") {
       return Hero(
-        tag: medicine.medicineName + medicine.medicineType,
+        tag: medicine.medicineName! + medicine.medicineType!,
         child: Icon(
           IconData(0xe901, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -203,7 +205,7 @@ class MainSection extends StatelessWidget {
       );
     } else if (medicine.medicineType == "Syringe") {
       return Hero(
-        tag: medicine.medicineName + medicine.medicineType,
+        tag: medicine.medicineName! + medicine.medicineType!,
         child: Icon(
           IconData(0xe902, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -212,7 +214,7 @@ class MainSection extends StatelessWidget {
       );
     } else if (medicine.medicineType == "Tablet") {
       return Hero(
-        tag: medicine.medicineName + medicine.medicineType,
+        tag: medicine.medicineName! + medicine.medicineType!,
         child: Icon(
           IconData(0xe903, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -221,7 +223,7 @@ class MainSection extends StatelessWidget {
       );
     }
     return Hero(
-      tag: medicine.medicineName + medicine.medicineType,
+      tag: medicine.medicineName! + medicine.medicineType!,
       child: Icon(
         Icons.local_hospital,
         color: Color(0xFF3EB16F),
@@ -242,7 +244,7 @@ class MainSection extends StatelessWidget {
           Column(
             children: <Widget>[
               Hero(
-                tag: medicine.medicineName,
+                tag: medicine.medicineName!,
                 child: Material(
                   color: Colors.transparent,
                   child: MainInfoTab(
@@ -267,9 +269,9 @@ class MainSection extends StatelessWidget {
 
 class MainInfoTab extends StatelessWidget {
   final String fieldTitle;
-  final String fieldInfo;
+  final String? fieldInfo;
 
-  MainInfoTab({Key key, @required this.fieldTitle, @required this.fieldInfo})
+  MainInfoTab({Key? key, required this.fieldTitle, required this.fieldInfo})
       : super(key: key);
 
   @override
@@ -289,7 +291,7 @@ class MainInfoTab extends StatelessWidget {
                 fontWeight: FontWeight.bold),
           ),
           Text(
-            fieldInfo,
+            fieldInfo!,
             style: TextStyle(
                 fontSize: 24,
                 color: Color(0xFF3EB16F),
@@ -304,7 +306,7 @@ class MainInfoTab extends StatelessWidget {
 class ExtendedSection extends StatelessWidget {
   final Medicine medicine;
 
-  ExtendedSection({Key key, @required this.medicine}) : super(key: key);
+  ExtendedSection({Key? key, required this.medicine}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -323,15 +325,15 @@ class ExtendedSection extends StatelessWidget {
             fieldInfo: "Every " +
                 medicine.interval.toString() +
                 " hours  | " +
-                " ${medicine.interval == 24 ? "One time a day" : (24 / medicine.interval).floor().toString() + " times a day"}",
+                " ${medicine.interval == 24 ? "One time a day" : (24 / medicine.interval!).floor().toString() + " times a day"}",
           ),
           ExtendedInfoTab(
               fieldTitle: "Start Time",
-              fieldInfo: medicine.startTime[0] +
-                  medicine.startTime[1] +
+              fieldInfo: medicine.startTime![0] +
+                  medicine.startTime![1] +
                   ":" +
-                  medicine.startTime[2] +
-                  medicine.startTime[3]),
+                  medicine.startTime![2] +
+                  medicine.startTime![3]),
         ],
       ),
     );
@@ -340,10 +342,10 @@ class ExtendedSection extends StatelessWidget {
 
 class ExtendedInfoTab extends StatelessWidget {
   final String fieldTitle;
-  final String fieldInfo;
+  final String? fieldInfo;
 
   ExtendedInfoTab(
-      {Key key, @required this.fieldTitle, @required this.fieldInfo})
+      {Key? key, required this.fieldTitle, required this.fieldInfo})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -365,7 +367,7 @@ class ExtendedInfoTab extends StatelessWidget {
               ),
             ),
             Text(
-              fieldInfo,
+              fieldInfo!,
               style: TextStyle(
                 fontSize: 18,
                 color: Color(0xFFC9C9C9),

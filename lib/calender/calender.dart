@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:device_calendar/device_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
-
   Function _calendarCallback;
 
   CalendarPage(this._calendarCallback);
@@ -14,11 +13,10 @@ class CalendarPage extends StatefulWidget {
 }
 
 class CalendarPageState extends State<CalendarPage> {
-  DeviceCalendarPlugin _deviceCalendarPlugin;
+  late DeviceCalendarPlugin _deviceCalendarPlugin;
 
-  List<Calendar> _calendars;
-  Calendar _selectedCalendar;
-
+  List<Calendar>? _calendars;
+  late Calendar _selectedCalendar;
 
   CalendarPageState() {
     _deviceCalendarPlugin = new DeviceCalendarPlugin();
@@ -48,8 +46,9 @@ class CalendarPageState extends State<CalendarPage> {
                 return new GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedCalendar = _calendars[index];
-                      this.widget._calendarCallback(_selectedCalendar.id, _selectedCalendar.name, _deviceCalendarPlugin);
+                      _selectedCalendar = _calendars![index];
+                      this.widget._calendarCallback(_selectedCalendar.id,
+                          _selectedCalendar.name, _deviceCalendarPlugin);
                     });
                   },
                   child: new Padding(
@@ -59,13 +58,16 @@ class CalendarPageState extends State<CalendarPage> {
                         new Expanded(
                           flex: 1,
                           child: new Text(
-                            _calendars[index].name,
+                            _calendars![index].name!,
                             style: new TextStyle(fontSize: 25.0),
                           ),
                         ),
-                        new Icon(_calendars[index].isReadOnly
-                            ? Icons.lock
-                            : Icons.lock_open, color: Colors.white,)
+                        new Icon(
+                          _calendars![index].isReadOnly!
+                              ? Icons.lock
+                              : Icons.lock_open,
+                          color: Colors.white,
+                        )
                       ],
                     ),
                   ),
@@ -83,21 +85,19 @@ class CalendarPageState extends State<CalendarPage> {
     //Request permissions first if they haven't been granted
     try {
       var permissionsGranted = await _deviceCalendarPlugin.hasPermissions();
-      if (permissionsGranted.isSuccess && !permissionsGranted.data) {
+      if (permissionsGranted.isSuccess && !permissionsGranted.data!) {
         permissionsGranted = await _deviceCalendarPlugin.requestPermissions();
-        if (!permissionsGranted.isSuccess || !permissionsGranted.data) {
+        if (!permissionsGranted.isSuccess || !permissionsGranted.data!) {
           return;
         }
       }
 
       final calendarsResult = await _deviceCalendarPlugin.retrieveCalendars();
       setState(() {
-        _calendars = calendarsResult?.data;
+        _calendars = calendarsResult.data;
       });
     } catch (e) {
       print(e);
     }
   }
-
-
 }

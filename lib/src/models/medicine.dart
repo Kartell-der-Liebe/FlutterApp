@@ -1,10 +1,10 @@
 class Medicine {
-  final List<dynamic> notificationIDs;
-  final String medicineName;
-  final int dosage;
-  final String medicineType;
-  final int interval;
-  final String startTime;
+  final List<dynamic>? notificationIDs;
+  final String? medicineName;
+  final int? dosage;
+  final String? medicineType;
+  final int? interval;
+  final String? startTime;
 
   Medicine({
     this.notificationIDs,
@@ -15,12 +15,12 @@ class Medicine {
     this.interval,
   });
 
-  String get getName => medicineName;
-  int get getDosage => dosage;
-  String get getType => medicineType;
-  int get getInterval => interval;
-  String get getStartTime => startTime;
-  List<dynamic> get getIDs => notificationIDs;
+  String? get getName => medicineName;
+  int? get getDosage => dosage;
+  String? get getType => medicineType;
+  int? get getInterval => interval;
+  String? get getStartTime => startTime;
+  List<dynamic>? get getIDs => notificationIDs;
 
   Map<String, dynamic> toJson() {
     return {

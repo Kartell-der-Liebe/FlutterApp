@@ -18,18 +18,18 @@ class NewEntry extends StatefulWidget {
 }
 
 class _NewEntryState extends State<NewEntry> {
-  TextEditingController nameController;
-  TextEditingController dosageController;
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  NewEntryBloc _newEntryBloc;
+  TextEditingController? nameController;
+  TextEditingController? dosageController;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  NewEntryBloc? _newEntryBloc;
 
-  GlobalKey<ScaffoldState> _scaffoldKey;
+  GlobalKey<ScaffoldState>? _scaffoldKey;
 
   void dispose() {
     super.dispose();
-    nameController.dispose();
-    dosageController.dispose();
-    _newEntryBloc.dispose();
+    nameController!.dispose();
+    dosageController!.dispose();
+    _newEntryBloc!.dispose();
   }
 
   void initState() {
@@ -49,7 +49,7 @@ class _NewEntryState extends State<NewEntry> {
 
     return Scaffold(
       key: _scaffoldKey,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -67,7 +67,7 @@ class _NewEntryState extends State<NewEntry> {
         elevation: 0.0,
       ),
       body: Container(
-        child: Provider<NewEntryBloc>.value(
+        child: Provider<NewEntryBloc?>.value(
           value: _newEntryBloc,
           child: ListView(
             padding: EdgeInsets.symmetric(
@@ -115,7 +115,7 @@ class _NewEntryState extends State<NewEntry> {
               Padding(
                 padding: EdgeInsets.only(top: 10.0),
                 child: StreamBuilder<MedicineType>(
-                  stream: _newEntryBloc.selectedMedicineType,
+                  stream: _newEntryBloc!.selectedMedicineType,
                   builder: (context, snapshot) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -175,9 +175,11 @@ class _NewEntryState extends State<NewEntry> {
                 child: Container(
                   width: 220,
                   height: 70,
-                  child: FlatButton(
-                    color: Color(0xFF3EB16F),
-                    shape: StadiumBorder(),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF3EB16F),
+                      shape: StadiumBorder(),
+                    ),
                     child: Center(
                       child: Text(
                         "Confirm",
@@ -189,48 +191,48 @@ class _NewEntryState extends State<NewEntry> {
                       ),
                     ),
                     onPressed: () {
-                      String medicineName;
-                      int dosage;
+                      String? medicineName;
+                      int? dosage;
                       //--------------------Error Checking------------------------
                       //Had to do error checking in UI
                       //Due to unoptimized BLoC value-grabbing architecture
-                      if (nameController.text == "") {
-                        _newEntryBloc.submitError(EntryError.NameNull);
+                      if (nameController!.text == "") {
+                        _newEntryBloc!.submitError(EntryError.NameNull);
                         return;
                       }
-                      if (nameController.text != "") {
-                        medicineName = nameController.text;
+                      if (nameController!.text != "") {
+                        medicineName = nameController!.text;
                       }
-                      if (dosageController.text == "") {
+                      if (dosageController!.text == "") {
                         dosage = 0;
                       }
-                      if (dosageController.text != "") {
-                        dosage = int.parse(dosageController.text);
+                      if (dosageController!.text != "") {
+                        dosage = int.parse(dosageController!.text);
                       }
-                      for (var medicine in _globalBloc.medicineList$.value) {
+                      for (var medicine in _globalBloc.medicineList$!.value) {
                         if (medicineName == medicine.medicineName) {
-                          _newEntryBloc.submitError(EntryError.NameDuplicate);
+                          _newEntryBloc!.submitError(EntryError.NameDuplicate);
                           return;
                         }
                       }
-                      if (_newEntryBloc.selectedInterval$.value == 0) {
-                        _newEntryBloc.submitError(EntryError.Interval);
+                      if (_newEntryBloc!.selectedInterval$!.value == 0) {
+                        _newEntryBloc!.submitError(EntryError.Interval);
                         return;
                       }
-                      if (_newEntryBloc.selectedTimeOfDay$.value == "None") {
-                        _newEntryBloc.submitError(EntryError.StartTime);
+                      if (_newEntryBloc!.selectedTimeOfDay$!.value == "None") {
+                        _newEntryBloc!.submitError(EntryError.StartTime);
                         return;
                       }
                       //---------------------------------------------------------
-                      String medicineType = _newEntryBloc
+                      String medicineType = _newEntryBloc!
                           .selectedMedicineType.value
                           .toString()
                           .substring(13);
-                      int interval = _newEntryBloc.selectedInterval$.value;
-                      String startTime = _newEntryBloc.selectedTimeOfDay$.value;
+                      int? interval = _newEntryBloc!.selectedInterval$!.value;
+                      String startTime = _newEntryBloc!.selectedTimeOfDay$!.value;
 
                       List<int> intIDs =
-                          makeIDs(24 / _newEntryBloc.selectedInterval$.value);
+                          makeIDs(24 / _newEntryBloc!.selectedInterval$!.value!);
                       List<String> notificationIDs = intIDs
                           .map((i) => i.toString())
                           .toList(); //for Shared preference
@@ -252,7 +254,7 @@ class _NewEntryState extends State<NewEntry> {
                         MaterialPageRoute(
                           builder: (BuildContext context) {
                             return; //SuccessScreen();
-                          },
+                          } as Widget Function(BuildContext),
                         ),
                       );
                     },
@@ -267,7 +269,7 @@ class _NewEntryState extends State<NewEntry> {
   }
 
   void initializeErrorListen() {
-    _newEntryBloc.errorState$.listen(
+    _newEntryBloc!.errorState$!.listen(
       (EntryError error) {
         switch (error) {
           case EntryError.NameNull:
@@ -292,7 +294,7 @@ class _NewEntryState extends State<NewEntry> {
   }
 
   void displayError(String error) {
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(_scaffoldKey!.currentContext!).showSnackBar(
       SnackBar(
         backgroundColor: Colors.red,
         content: Text(error),
@@ -313,53 +315,54 @@ class _NewEntryState extends State<NewEntry> {
   initializeNotifications() async {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
-    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettingsIOS = DarwinInitializationSettings();
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+        onDidReceiveNotificationResponse: onSelectNotification);
   }
 
-  Future onSelectNotification(String payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: ' + payload);
+  void onSelectNotification(NotificationResponse notificationResponse) {
+    if (notificationResponse.payload != null) {
+      debugPrint('notification payload: ' + notificationResponse.payload!);
     }
-    await Navigator.push(
+    Navigator.push(
       context,
       new MaterialPageRoute(builder: (context) => HomePage()),
     );
   }
 
   Future<void> scheduleNotification(Medicine medicine) async {
-    var hour = int.parse(medicine.startTime[0] + medicine.startTime[1]);
+    var hour = int.parse(medicine.startTime![0] + medicine.startTime![1]);
     var ogValue = hour;
-    var minute = int.parse(medicine.startTime[2] + medicine.startTime[3]);
+    var minute = int.parse(medicine.startTime![2] + medicine.startTime![3]);
 
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'repeatDailyAtTime channel id',
       'repeatDailyAtTime channel name',
-      'repeatDailyAtTime description',
+      channelDescription: 'repeatDailyAtTime description',
       importance: Importance.max,
       ledColor: Color(0xFF3EB16F),
       ledOffMs: 1000,
       ledOnMs: 1000,
       enableLights: true,
     );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
 
-    for (int i = 0; i < (24 / medicine.interval).floor(); i++) {
-      if ((hour + (medicine.interval * i) > 23)) {
-        hour = hour + (medicine.interval * i) - 24;
+    for (int i = 0; i < (24 / medicine.interval!).floor(); i++) {
+      if ((hour + (medicine.interval! * i) > 23)) {
+        hour = hour + (medicine.interval! * i) - 24;
       } else {
-        hour = hour + (medicine.interval * i);
+        hour = hour + (medicine.interval! * i);
       }
       await flutterLocalNotificationsPlugin.showDailyAtTime(
-          int.parse(medicine.notificationIDs[i]),
+          int.parse(medicine.notificationIDs![i]),
           'Mediminder: ${medicine.medicineName}',
           medicine.medicineType.toString() != MedicineType.None.toString()
-              ? 'It is time to take your ${medicine.medicineType.toLowerCase()}, according to schedule'
+              ? 'It is time to take your ${medicine.medicineType!.toLowerCase()}, according to schedule'
               : 'It is time to take your medicine, according to schedule',
           Time(hour, minute, 0),
           platformChannelSpecifics);
@@ -381,7 +384,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
     12,
     24,
   ];
-  var _selected = 0;
+  int? _selected = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -457,9 +460,9 @@ class _SelectTimeState extends State<SelectTime> {
   TimeOfDay _time = TimeOfDay(hour: 0, minute: 00);
   bool _clicked = false;
 
-  Future<TimeOfDay> _selectTime(BuildContext context) async {
+  Future<TimeOfDay?> _selectTime(BuildContext context) async {
     final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
-    final TimeOfDay picked = await showTimePicker(
+    final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _time,
     );
@@ -480,9 +483,11 @@ class _SelectTimeState extends State<SelectTime> {
       height: 60,
       child: Padding(
         padding: EdgeInsets.only(top: 10.0, bottom: 4),
-        child: FlatButton(
-          color: Color(0xFF3EB16F),
-          shape: StadiumBorder(),
+        child: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: Color(0xFF3EB16F),
+            shape: StadiumBorder(),
+          ),
           onPressed: () {
             _selectTime(context);
           },
@@ -511,11 +516,11 @@ class MedicineTypeColumn extends StatelessWidget {
   final bool isSelected;
 
   MedicineTypeColumn(
-      {Key key,
-      @required this.type,
-      @required this.name,
-      @required this.iconValue,
-      @required this.isSelected})
+      {Key? key,
+      required this.type,
+      required this.name,
+      required this.iconValue,
+      required this.isSelected})
       : super(key: key);
 
   @override
@@ -575,9 +580,9 @@ class PanelTitle extends StatelessWidget {
   final String title;
   final bool isRequired;
   PanelTitle({
-    Key key,
-    @required this.title,
-    @required this.isRequired,
+    Key? key,
+    required this.title,
+    required this.isRequired,
   }) : super(key: key);
 
   @override
