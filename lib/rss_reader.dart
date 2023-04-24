@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/io_client.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -20,7 +24,7 @@ class NewsPageState extends State<NewsPage> {
   // Feed URL being used for the app. In this case is the Hacker News job feed.
   static const String FEED_URL = 'https://eineliebe.de/feed/';
 
-  late RssFeed _feed; // RSS Feed Object
+  RssFeed _feed = RssFeed(); // RSS Feed Object
   late String _title; // Place holder for appbar title.
 
   // Notification Strings
@@ -49,15 +53,10 @@ class NewsPageState extends State<NewsPage> {
       _feed = feed;
     });
   }
-
   // Method to navigate to the URL of a RSS feed item.
   Future<void> openFeed(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: true,
-        forceWebView: false,
-      );
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
       return;
     }
     updateTitle(feedOpenErrorMessage);
@@ -82,10 +81,14 @@ class NewsPageState extends State<NewsPage> {
   // Method to get the RSS data from the provided URL in the FEED_URL variable.
   Future<RssFeed?> loadFeed() async {
     try {
-      final client = http.Client();
-      final response = await client.get(FEED_URL as Uri);
+      final client = IOClient(HttpClient()
+        ..badCertificateCallback =
+            ((X509Certificate cert, String host, int port) => true));
+
+      final response = await client.get(Uri.parse(FEED_URL));
       return RssFeed.parse(response.body);
     } catch (e) {
+      print(e);
       // handle any exceptions here
     }
     return null;
@@ -196,7 +199,7 @@ class NewsPageState extends State<NewsPage> {
   // Method that returns the Text Widget for the subtitle of our RSS data.
   subtitle(subTitle) {
     return Text(
-      subTitle,
+      subTitle.toString(),
       style: TextStyle(
           fontSize: 15.0, fontWeight: FontWeight.w300, color: Colors.black38),
       maxLines: 1,
