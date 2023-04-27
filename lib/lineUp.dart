@@ -4,13 +4,14 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:device_calendar/device_calendar.dart';
-
-class AppRoutes {
-  static final calendars = "/";
-}
+import 'package:like_button/like_button.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 class LineUpPage extends StatefulWidget {
   final String title;
@@ -160,11 +161,11 @@ class ActList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.builder(
+    return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: acts == null ? 0 : acts.length,
+        itemCount: acts.length,
         itemBuilder: (BuildContext context, int index) {
-          return new Card(
+          return Card(
               child: new Container(
             constraints: new BoxConstraints.expand(
               height: 200.0,
@@ -206,15 +207,15 @@ class ActList extends StatelessWidget {
 class TimeTable {
   final String time;
   final String act1;
-  final String act2;
+  final String day;
 
-  TimeTable({required this.time, required this.act1, required this.act2});
+  TimeTable({required this.time, required this.act1, required this.day});
 
   factory TimeTable.fromJson(Map<String, dynamic> json) {
     return TimeTable(
       time: json['time'] as String,
       act1: json['act1'] as String,
-      act2: json['act2'] as String,
+      day: json['day'] as String,
     );
   }
 }
@@ -222,10 +223,16 @@ class TimeTable {
 class TimeTableList extends StatelessWidget {
   final List<TimeTable> timeTable;
 
-  TimeTableList({super.key, required this.timeTable});
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: AndroidInitializationSettings('app_icon'));
+
+  TimeTableList({key, required this.timeTable});
 
   @override
   Widget build(BuildContext context) {
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
     return Container(
       child: ListView(children: [
         Text("Main Stage", textScaleFactor: 2, textAlign: TextAlign.center),
@@ -246,7 +253,7 @@ class TimeTableList extends StatelessWidget {
                 .map((e) => DataRow(cells: [
                       DataCell(Text(e.time)),
                       DataCell(Text(e.act1)),
-                      DataCell(Text(e.act2)),
+                      DataCell(Text(e.day)),
                     ]))
                 .toList()),
         Text(
@@ -263,18 +270,59 @@ class TimeTableList extends StatelessWidget {
               DataColumn(
                 label: Text('Freitag'),
               ),
-              DataColumn(
-                label: Text('Samstag'),
-              ),
+              DataColumn(label: Icon(Icons.timer)),
             ],
             rows: timeTable
                 .map((e) => DataRow(cells: [
                       DataCell(Text(e.time)),
                       DataCell(Text(e.act1)),
-                      DataCell(Text(e.act2)),
+                      DataCell(LikeButton(
+                        likeBuilder: (bool isLiked) {
+                          if (isLiked) {
+                            _zonedScheduleNotification(e);
+                          }
+                          return Icon(
+                            Icons.favorite,
+                            color: isLiked ? Colors.red : Colors.grey,
+                          );
+                        },
+                      ))
                     ]))
                 .toList()),
       ]),
     );
+  }
+
+  Future<void> _zonedScheduleNotification(TimeTable timeTable) async {
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    print(tz.TZDateTime.from(
+        DateTime.utc(
+            2023,
+            4,
+            int.parse(timeTable.day),
+            int.parse(timeTable.time.split(':').first) - 2,
+            int.parse(timeTable.time.split(':').last)), tz.local)
+        .subtract(const Duration(minutes: 15)));
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        timeTable.act1,
+        timeTable.day,
+        tz.TZDateTime.from(
+                DateTime.utc(
+                    2023,
+                    4,
+                    int.parse(timeTable.day),
+                    int.parse(timeTable.time.split(':').first) - 2,
+                    int.parse(timeTable.time.split(':').last)),
+                tz.local)
+            .subtract(const Duration(minutes: 15)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails('0', 'test',
+                channelDescription: 'your channel description')),
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidAllowWhileIdle: true);
   }
 }
