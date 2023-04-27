@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class Act {
   final String name;
   final String time;
@@ -11,11 +10,11 @@ class Act {
 
   Act(
       {required this.name,
-        required this.time,
-        required this.stage,
-        required this.duration,
-        required this.day,
-        required this.image});
+      required this.time,
+      required this.stage,
+      required this.duration,
+      required this.day,
+      required this.image});
 
   factory Act.fromJson(Map<String, dynamic> json) {
     return Act(
@@ -41,39 +40,29 @@ class ActList extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return Card(
               child: new Container(
-                constraints: new BoxConstraints.expand(
-                  height: 200.0,
+            constraints: new BoxConstraints.expand(
+              height: 200.0,
+            ),
+            padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+            margin: new EdgeInsets.only(bottom: 4),
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: new AssetImage(acts[index].image),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: new Stack(
+              children: <Widget>[
+                new Center(
+                  child: new Text(acts[index].name,
+                      style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      )),
                 ),
-                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
-                margin: new EdgeInsets.only(bottom: 4),
-                decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage(acts[index].image),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: new Stack(
-                  children: <Widget>[
-                    new Center(
-                      child: new Text(acts[index].name,
-                          style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                          )),
-                    ),
-                    GestureDetector(
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        child: SizedBox(
-                            child: Image.asset(
-                              'assets/images/calendar_icon_kartell.png',
-                              height: 60,
-                            )),
-                      ),
-                    ),
-                  ],
-                ),
-              ));
+              ],
+            ),
+          ));
         });
   }
 }

@@ -1,0 +1,32 @@
+[
+  {
+    "stage": "Main",
+    "acts": [
+      {
+        "day": "28",
+        "time": "18:30",
+        "name": "Scooter"
+      },
+      {
+        "day": "27",
+        "time": "14:00",
+        "name": "Die Aerzte"
+      }
+    ]
+  },
+  {
+    "stage": "DJ",
+    "acts": [
+      {
+        "day": "28",
+        "time": "18:30",
+        "name": "Da Tweekaz"
+      },
+      {
+        "day": "27",
+        "time": "14:00",
+        "name": "Headhunter"
+      }
+    ]
+  }
+]

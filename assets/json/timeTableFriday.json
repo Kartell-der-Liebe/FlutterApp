@@ -1,0 +1,32 @@
+[
+  {
+    "stage": "Main",
+    "acts": [
+      {
+        "day": "28",
+        "time": "18:30",
+        "name": "Britney Spears"
+      },
+      {
+        "day": "27",
+        "time": "14:00",
+        "name": "Die Doofen"
+      }
+    ]
+  },
+  {
+    "stage": "DJ",
+    "acts": [
+      {
+        "day": "28",
+        "time": "18:30",
+        "name": "Bluemchen"
+      },
+      {
+        "day": "27",
+        "time": "14:00",
+        "name": "Slipknot"
+      }
+    ]
+  }
+]

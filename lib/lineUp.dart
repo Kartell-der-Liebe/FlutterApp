@@ -23,16 +23,15 @@ class LineUpPageState extends State<LineUpPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: new Scaffold(
           appBar: new AppBar(
             title: Text("Line Up"),
             bottom: TabBar(
               tabs: [
                 new Tab(text: "Acts"),
-                new Tab(
-                  text: "Time Table",
-                ),
+                new Tab(text: "Friday"),
+                new Tab(text: "Saturday")
               ],
             ),
           ),
@@ -62,7 +61,26 @@ class LineUpPageState extends State<LineUpPage> {
                   // Use future builder and DefaultAssetBundle to load the local JSON file
                   child: new FutureBuilder(
                       future: DefaultAssetBundle.of(context)
-                          .loadString('assets/json/timeTable.json'),
+                          .loadString('assets/json/timeTableFriday.json'),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                          case ConnectionState.waiting:
+                            return Center(child: CircularProgressIndicator());
+                          default:
+                            List<TimeTable> timeTable =
+                                parseJosnTimeTable(snapshot.data.toString());
+                            return new TimeTableList(timeTable: timeTable);
+                        }
+                      }),
+                ),
+              ),
+              Container(
+                child: new Center(
+                  // Use future builder and DefaultAssetBundle to load the local JSON file
+                  child: new FutureBuilder(
+                      future: DefaultAssetBundle.of(context)
+                          .loadString('assets/json/timeTableSaturday.json'),
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/lineUp/acts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,19 +8,33 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-class TimeTable {
+class TimeTableActs {
   final String time;
-  final String act1;
+  final String name;
   final String day;
 
-  TimeTable({required this.time, required this.act1, required this.day});
+  TimeTableActs({required this.time, required this.name, required this.day});
 
-  factory TimeTable.fromJson(Map<String, dynamic> json) {
-    return TimeTable(
+  factory TimeTableActs.fromJson(Map<String, dynamic> json) {
+    return TimeTableActs(
       time: json['time'] as String,
-      act1: json['act1'] as String,
+      name: json['name'] as String,
       day: json['day'] as String,
     );
+  }
+}
+
+class TimeTable {
+  final String stage;
+  final List<TimeTableActs> acts;
+
+  TimeTable({required this.stage, required this.acts});
+
+  factory TimeTable.fromJson(dynamic json) {
+    var actObjsJson = json['acts'] as List;
+    List<TimeTableActs> temp2 =
+        actObjsJson.map((actJson) => TimeTableActs.fromJson(actJson)).toList();
+    return TimeTable(stage: json['stage'] as String, acts: temp2);
   }
 }
 
@@ -37,7 +52,7 @@ class TimeTableListState extends State<TimeTableList> {
       SharedPreferences.getInstance();
   SharedPreferences? preferences;
   final int year = 2023;
-  final int month = DateTime.april;
+  final int month = DateTime.august;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   final InitializationSettings initializationSettings = InitializationSettings(
@@ -65,45 +80,27 @@ class TimeTableListState extends State<TimeTableList> {
             headingRowColor: MaterialStateProperty.all(Colors.black26),
             columns: const <DataColumn>[
               DataColumn(
-                label: Text('Uhrzeit'),
+                label: Text('Time'),
               ),
               DataColumn(
-                label: Text('Freitag'),
+                label: Text('Friday'),
               ),
               DataColumn(
-                label: Text('Samstag'),
+                label: Text('Reminder'),
               ),
             ],
             rows: widget.timeTable
+                .elementAt(0)
+                .acts
                 .asMap()
                 .entries
                 .map((e) => DataRow(cells: [
                       DataCell(Text(e.value.time)),
-                      DataCell(Text(e.value.act1)),
-                      DataCell(Text(e.value.day)),
-                    ]))
-                .toList()),
-        Text(
-          "DJ Zelt",
-          textScaleFactor: 2,
-          textAlign: TextAlign.center,
-        ),
-        DataTable(
-            headingRowColor: MaterialStateProperty.all(Colors.black26),
-            columns: const <DataColumn>[
-              DataColumn(label: Text('Uhrzeit')),
-              DataColumn(label: Text('Freitag')),
-              DataColumn(label: Text('Reminder')),
-            ],
-            rows: widget.timeTable
-                .asMap()
-                .entries
-                .map((e) => DataRow(cells: [
-                      DataCell(Text(e.value.time)),
-                      DataCell(Text(e.value.act1)),
+                      DataCell(Text(e.value.name)),
                       DataCell(
                         LikeButton(
-                          isLiked: preferences?.getBool(e.value.act1) == null || preferences?.getBool(e.value.act1) == false
+                          isLiked: preferences?.getBool(e.value.name) == null ||
+                                  preferences?.getBool(e.value.name) == false
                               ? false
                               : true,
                           onTap: (bool isLiked) async {
@@ -116,7 +113,7 @@ class TimeTableListState extends State<TimeTableList> {
                                       int.parse(e.value.time.split(':').last))
                                   .subtract(const Duration(minutes: 15)))) {
                                 if (preferences != null) {
-                                  preferences!.remove(e.value.act1);
+                                  preferences!.remove(e.value.name);
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Time for reminder is in the past",
@@ -129,10 +126,71 @@ class TimeTableListState extends State<TimeTableList> {
                                 }
                                 return false;
                               }
-                              preferences?.setBool(e.value.act1, true);
+                              preferences?.setBool(e.value.name, true);
                               _zonedScheduleNotification(e.value, e.key);
                             } else {
-                              preferences?.setBool(e.value.act1, false);
+                              preferences?.setBool(e.value.name, false);
+                              flutterLocalNotificationsPlugin.cancel(e.key);
+                            }
+                            return !isLiked;
+                          },
+                        ),
+                      )
+                    ]))
+                .toList()),
+        Text(
+          "DJ Floor",
+          textScaleFactor: 2,
+          textAlign: TextAlign.center,
+        ),
+        DataTable(
+            headingRowColor: MaterialStateProperty.all(Colors.black26),
+            columns: const <DataColumn>[
+              DataColumn(label: Text('Time')),
+              DataColumn(label: Text('Saturday')),
+              DataColumn(label: Text('Reminder')),
+            ],
+            rows: widget.timeTable
+                .elementAt(1)
+                .acts
+                .asMap()
+                .entries
+                .map((e) => DataRow(cells: [
+                      DataCell(Text(e.value.time)),
+                      DataCell(Text(e.value.name)),
+                      DataCell(
+                        LikeButton(
+                          isLiked: preferences?.getBool(e.value.name) == null ||
+                                  preferences?.getBool(e.value.name) == false
+                              ? false
+                              : true,
+                          onTap: (bool isLiked) async {
+                            if (!isLiked) {
+                              if (DateTime.now().isAfter(DateTime(
+                                      year,
+                                      month,
+                                      int.parse(e.value.day),
+                                      int.parse(e.value.time.split(':').first),
+                                      int.parse(e.value.time.split(':').last))
+                                  .subtract(const Duration(minutes: 15)))) {
+                                if (preferences != null) {
+                                  preferences!.remove(e.value.name);
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "Time for reminder is in the past",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.redAccent,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                }
+                                return false;
+                              }
+                              preferences?.setBool(e.value.name, true);
+                              _zonedScheduleNotification(e.value, e.key);
+                            } else {
+                              preferences?.setBool(e.value.name, false);
                               flutterLocalNotificationsPlugin.cancel(e.key);
                             }
                             return !isLiked;
@@ -152,18 +210,17 @@ class TimeTableListState extends State<TimeTableList> {
     tz.setLocalLocation(tz.getLocation(timeZoneName.toString()));
   }
 
-  Future<void> _zonedScheduleNotification(
-      TimeTable timeTable, int index) async {
+  Future<void> _zonedScheduleNotification(TimeTableActs act, int index) async {
     DateTime timer = DateTime(
             year,
             month,
-            int.parse(timeTable.day),
-            int.parse(timeTable.time.split(':').first).round(),
+            int.parse(act.day),
+            int.parse(act.time.split(':').first).round(),
             // convert offset in milli seconds to offset in hours
-            int.parse(timeTable.time.split(':').last))
+            int.parse(act.time.split(':').last))
         .subtract(const Duration(minutes: 15));
     Fluttertoast.showToast(
-        msg: "Time for ${timeTable.act1} set at $timer",
+        msg: "Time for ${act.name} set at $timer",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
@@ -172,8 +229,8 @@ class TimeTableListState extends State<TimeTableList> {
         fontSize: 16.0);
     await flutterLocalNotificationsPlugin.zonedSchedule(
         index,
-        'Reminder for ${timeTable.act1}',
-        '${timeTable.act1} starts his performance in 15 minutes',
+        'Reminder for ${act.name}',
+        '${act.name} starts his performance in 15 minutes',
         tz.TZDateTime.from(
             DateTime.now().add(const Duration(minutes: 2)), tz.local),
         NotificationDetails(
