@@ -103,9 +103,11 @@ class TimeTableListState extends State<TimeTableList> {
                       DataCell(Text(e.value.act1)),
                       DataCell(
                         LikeButton(
-                          isLiked: preferences?.getBool(e.value.act1),
-                          likeBuilder: (bool isLiked) {
-                            if (isLiked) {
+                          isLiked: preferences?.getBool(e.value.act1) == null || preferences?.getBool(e.value.act1) == false
+                              ? false
+                              : true,
+                          onTap: (bool isLiked) async {
+                            if (!isLiked) {
                               if (DateTime.now().isAfter(DateTime(
                                       year,
                                       month,
@@ -125,20 +127,15 @@ class TimeTableListState extends State<TimeTableList> {
                                       textColor: Colors.white,
                                       fontSize: 16.0);
                                 }
-                                return Icon(
-                                  Icons.favorite,
-                                  color: Colors.grey,
-                                );
+                                return false;
                               }
                               preferences?.setBool(e.value.act1, true);
                               _zonedScheduleNotification(e.value, e.key);
                             } else {
+                              preferences?.setBool(e.value.act1, false);
                               flutterLocalNotificationsPlugin.cancel(e.key);
                             }
-                            return Icon(
-                              Icons.favorite,
-                              color: isLiked ? Colors.red : Colors.grey,
-                            );
+                            return !isLiked;
                           },
                         ),
                       )
@@ -157,30 +154,28 @@ class TimeTableListState extends State<TimeTableList> {
 
   Future<void> _zonedScheduleNotification(
       TimeTable timeTable, int index) async {
-    print(tz.TZDateTime.from(
-            DateTime(
-                year,
-                month,
-                int.parse(timeTable.day),
-                int.parse(timeTable.time.split(':').first).round(),
-                // convert offset in milli seconds to offset in hours
-                int.parse(timeTable.time.split(':').last)),
-            tz.local)
-        .subtract(const Duration(minutes: 15)));
+    DateTime timer = DateTime(
+            year,
+            month,
+            int.parse(timeTable.day),
+            int.parse(timeTable.time.split(':').first).round(),
+            // convert offset in milli seconds to offset in hours
+            int.parse(timeTable.time.split(':').last))
+        .subtract(const Duration(minutes: 15));
+    Fluttertoast.showToast(
+        msg: "Time for ${timeTable.act1} set at $timer",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.white,
+        textColor: Colors.black,
+        fontSize: 16.0);
     await flutterLocalNotificationsPlugin.zonedSchedule(
         index,
         'Reminder for ${timeTable.act1}',
         '${timeTable.act1} starts his performance in 15 minutes',
         tz.TZDateTime.from(
-                DateTime(
-                    year,
-                    month,
-                    int.parse(timeTable.day),
-                    int.parse(timeTable.time.split(':').first).round(),
-                    // convert offset in milli seconds to offset in hours
-                    int.parse(timeTable.time.split(':').last)),
-                tz.local)
-            .subtract(const Duration(minutes: 15)),
+            DateTime.now().add(const Duration(minutes: 2)), tz.local),
         NotificationDetails(
             android: AndroidNotificationDetails('$index', 'Eine Liebe',
                 channelDescription: 'Reminder for acts')),
