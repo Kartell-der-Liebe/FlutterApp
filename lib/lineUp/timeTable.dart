@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/lineUp/acts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -44,7 +43,7 @@ class TimeTable {
 class TimeTableList extends StatefulWidget {
   final List<TimeTable> timeTable;
 
-  TimeTableList({key, required this.timeTable});
+  const TimeTableList({super.key, required this.timeTable});
 
   @override
   State<TimeTableList> createState() => TimeTableListState();
@@ -56,7 +55,7 @@ class TimeTableListState extends State<TimeTableList> {
   SharedPreferences? preferences;
   final int year = 2023;
   final int month = DateTime.august;
-  final InitializationSettings initializationSettings = InitializationSettings(
+  final InitializationSettings initializationSettings = const InitializationSettings(
       android: AndroidInitializationSettings('app_icon'));
 
   @override
@@ -68,146 +67,144 @@ class TimeTableListState extends State<TimeTableList> {
   }
 
   Future<void> initializePreference() async {
-    this.preferences = await SharedPreferences.getInstance();
+    preferences = await SharedPreferences.getInstance();
   }
 
   @override
   Widget build(BuildContext context) {
     initializeTime();
-    return Container(
-      child: ListView(children: [
-        Text("Main Stage", textScaleFactor: 2, textAlign: TextAlign.center),
-        DataTable(
-            headingRowColor: MaterialStateProperty.all(Colors.black26),
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Text('Time'),
-              ),
-              DataColumn(
-                label: Text('Friday'),
-              ),
-              DataColumn(
-                label: Text('Reminder'),
-              ),
-            ],
-            rows: widget.timeTable
-                .elementAt(0)
-                .acts
-                .asMap()
-                .entries
-                .map((e) => DataRow(cells: [
-                      DataCell(Text(e.value.time)),
-                      DataCell(Text(e.value.name)),
-                      DataCell(
-                        LikeButton(
-                          isLiked: preferences?.getBool(e.value.name) == null ||
-                                  preferences?.getBool(e.value.name) == false
-                              ? false
-                              : true,
-                          onTap: (bool isLiked) async {
-                            if (!isLiked) {
-                              if (DateTime.now().isAfter(DateTime(
-                                      year,
-                                      month,
-                                      int.parse(e.value.day),
-                                      int.parse(e.value.time.split(':').first),
-                                      int.parse(e.value.time.split(':').last))
-                                  .subtract(const Duration(minutes: 15)))) {
-                                if (preferences != null) {
-                                  preferences!.remove(e.value.name);
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg: "Time for reminder is in the past",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.redAccent,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                }
-                                return false;
+    return ListView(children: [
+      const Text("Main Stage", textScaleFactor: 2, textAlign: TextAlign.center),
+      DataTable(
+          headingRowColor: MaterialStateProperty.all(Colors.black26),
+          columns: const <DataColumn>[
+            DataColumn(
+              label: Text('Time'),
+            ),
+            DataColumn(
+              label: Text('Friday'),
+            ),
+            DataColumn(
+              label: Text('Reminder'),
+            ),
+          ],
+          rows: widget.timeTable
+              .elementAt(0)
+              .acts
+              .asMap()
+              .entries
+              .map((e) => DataRow(cells: [
+                    DataCell(Text(e.value.time)),
+                    DataCell(Text(e.value.name)),
+                    DataCell(
+                      LikeButton(
+                        isLiked: preferences?.getBool(e.value.name) == null ||
+                                preferences?.getBool(e.value.name) == false
+                            ? false
+                            : true,
+                        onTap: (bool isLiked) async {
+                          if (!isLiked) {
+                            if (DateTime.now().isAfter(DateTime(
+                                    year,
+                                    month,
+                                    int.parse(e.value.day),
+                                    int.parse(e.value.time.split(':').first),
+                                    int.parse(e.value.time.split(':').last))
+                                .subtract(const Duration(minutes: 15)))) {
+                              if (preferences != null) {
+                                preferences!.remove(e.value.name);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Time for reminder is in the past",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.redAccent,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
                               }
-                              preferences?.setBool(e.value.name, true);
-                              _zonedScheduleNotification(e.value, e.key);
-                            } else {
-                              preferences?.setBool(e.value.name, false);
-                              flutterLocalNotificationsPlugin.cancel(e.key);
+                              return false;
                             }
-                            return !isLiked;
-                          },
-                        ),
-                      )
-                    ]))
-                .toList()),
-        Text(
-          "DJ Floor",
-          textScaleFactor: 2,
-          textAlign: TextAlign.center,
-        ),
-        DataTable(
-            headingRowColor: MaterialStateProperty.all(Colors.black26),
-            columns: const <DataColumn>[
-              DataColumn(label: Text('Time')),
-              DataColumn(label: Text('Saturday')),
-              DataColumn(label: Text('Reminder')),
-            ],
-            rows: widget.timeTable
-                .elementAt(1)
-                .acts
-                .asMap()
-                .entries
-                .map((e) => DataRow(cells: [
-                      DataCell(Text(e.value.time)),
-                      DataCell(Text(e.value.name)),
-                      DataCell(
-                        LikeButton(
-                          isLiked: preferences?.getBool(e.value.name) == null ||
-                                  preferences?.getBool(e.value.name) == false
-                              ? false
-                              : true,
-                          onTap: (bool isLiked) async {
-                            if (!isLiked) {
-                              if (DateTime.now().isAfter(DateTime(
-                                      year,
-                                      month,
-                                      int.parse(e.value.day),
-                                      int.parse(e.value.time.split(':').first),
-                                      int.parse(e.value.time.split(':').last))
-                                  .subtract(const Duration(minutes: 15)))) {
-                                if (preferences != null) {
-                                  preferences!.remove(e.value.name);
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg: "Time for reminder is in the past",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.redAccent,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                }
-                                return false;
+                            preferences?.setBool(e.value.name, true);
+                            _zonedScheduleNotification(e.value, e.key);
+                          } else {
+                            preferences?.setBool(e.value.name, false);
+                            flutterLocalNotificationsPlugin.cancel(e.key);
+                          }
+                          return !isLiked;
+                        },
+                      ),
+                    )
+                  ]))
+              .toList()),
+      const Text(
+        "DJ Floor",
+        textScaleFactor: 2,
+        textAlign: TextAlign.center,
+      ),
+      DataTable(
+          headingRowColor: MaterialStateProperty.all(Colors.black26),
+          columns: const <DataColumn>[
+            DataColumn(label: Text('Time')),
+            DataColumn(label: Text('Saturday')),
+            DataColumn(label: Text('Reminder')),
+          ],
+          rows: widget.timeTable
+              .elementAt(1)
+              .acts
+              .asMap()
+              .entries
+              .map((e) => DataRow(cells: [
+                    DataCell(Text(e.value.time)),
+                    DataCell(Text(e.value.name)),
+                    DataCell(
+                      LikeButton(
+                        isLiked: preferences?.getBool(e.value.name) == null ||
+                                preferences?.getBool(e.value.name) == false
+                            ? false
+                            : true,
+                        onTap: (bool isLiked) async {
+                          if (!isLiked) {
+                            if (DateTime.now().isAfter(DateTime(
+                                    year,
+                                    month,
+                                    int.parse(e.value.day),
+                                    int.parse(e.value.time.split(':').first),
+                                    int.parse(e.value.time.split(':').last))
+                                .subtract(const Duration(minutes: 15)))) {
+                              if (preferences != null) {
+                                preferences!.remove(e.value.name);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Time for reminder is in the past",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.redAccent,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
                               }
-                              preferences?.setBool(e.value.name, true);
-                              _zonedScheduleNotification(e.value, e.key);
-                            } else {
-                              preferences?.setBool(e.value.name, false);
-                              flutterLocalNotificationsPlugin.cancel(e.key);
+                              return false;
                             }
-                            return !isLiked;
-                          },
-                        ),
-                      )
-                    ]))
-                .toList()),
-      ]),
-    );
+                            preferences?.setBool(e.value.name, true);
+                            _zonedScheduleNotification(e.value, e.key);
+                          } else {
+                            preferences?.setBool(e.value.name, false);
+                            flutterLocalNotificationsPlugin.cancel(e.key);
+                          }
+                          return !isLiked;
+                        },
+                      ),
+                    )
+                  ]))
+              .toList()),
+    ]);
   }
 
   Future<void> initializeTime() async {
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
     tz.initializeTimeZones();
-    final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName.toString()));
   }
 
