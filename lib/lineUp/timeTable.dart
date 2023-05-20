@@ -74,40 +74,30 @@ class TimeTableListState extends State<TimeTableList> {
   @override
   Widget build(BuildContext context) {
     initializeTime();
+    final longestNameMain = _textSize(
+        widget.timeTable.elementAt(0).acts.reduce((a, b) {
+          return a.name.length > b.name.length ? a : b;
+        }).name,
+        const TextStyle());
+    final longestNameDJ = _textSize(
+        widget.timeTable.elementAt(1).acts.reduce((a, b) {
+          return a.name.length > b.name.length ? a : b;
+        }).name,
+        const TextStyle());
     return ListView(children: [
       const Text("Main Stage", textScaleFactor: 2, textAlign: TextAlign.center),
       DataTable(
           headingRowColor: MaterialStateProperty.all(Colors.black26),
           columnSpacing: MediaQuery.of(context).size.width * 0.1,
-          dataRowHeight: _textSize(
-                              widget.timeTable.elementAt(0).acts.reduce((a, b) {
-                                return a.name.length > b.name.length ? a : b;
-                              }).name,
-                              const TextStyle())
-                          .width /
+          dataRowHeight: longestNameMain.width /
                       (MediaQuery.of(context).size.width * 0.25) *
-                      _textSize(
-                              widget.timeTable.elementAt(0).acts.reduce((a, b) {
-                                return a.name.length > b.name.length ? a : b;
-                              }).name,
-                              const TextStyle())
-                          .height *
+                      longestNameMain.height *
                       2.5 <=
                   48
               ? 48
-              : _textSize(
-                          widget.timeTable.elementAt(0).acts.reduce((a, b) {
-                            return a.name.length > b.name.length ? a : b;
-                          }).name,
-                          const TextStyle())
-                      .width /
+              : longestNameMain.width /
                   (MediaQuery.of(context).size.width * 0.25) *
-                  _textSize(
-                          widget.timeTable.elementAt(0).acts.reduce((a, b) {
-                            return a.name.length > b.name.length ? a : b;
-                          }).name,
-                          const TextStyle())
-                      .height *
+                  longestNameMain.height *
                   2.5,
           columns: const <DataColumn>[
             DataColumn(
@@ -176,33 +166,16 @@ class TimeTableListState extends State<TimeTableList> {
         textAlign: TextAlign.center,
       ),
       DataTable(
-          dataRowHeight: _textSize(
-                      widget.timeTable.elementAt(1).acts.reduce((a, b) {
-                        return a.name.length > b.name.length ? a : b;
-                      }).name,
-                      const TextStyle())
-                  .width /
-              (MediaQuery.of(context).size.width * 0.25) *
-              _textSize(
-                      widget.timeTable.elementAt(1).acts.reduce((a, b) {
-                        return a.name.length > b.name.length ? a : b;
-                      }).name,
-                      const TextStyle())
-                  .height *
-              2.5 <= 48 ? 48 : _textSize(
-              widget.timeTable.elementAt(1).acts.reduce((a, b) {
-                return a.name.length > b.name.length ? a : b;
-              }).name,
-              const TextStyle())
-              .width /
-              (MediaQuery.of(context).size.width * 0.25) *
-              _textSize(
-                  widget.timeTable.elementAt(1).acts.reduce((a, b) {
-                    return a.name.length > b.name.length ? a : b;
-                  }).name,
-                  const TextStyle())
-                  .height *
-              2.5,
+          dataRowHeight: longestNameDJ.width /
+                      (MediaQuery.of(context).size.width * 0.25) *
+                      longestNameDJ.height *
+                      2.5 <=
+                  48
+              ? 48
+              : longestNameDJ.width /
+                  (MediaQuery.of(context).size.width * 0.25) *
+                  longestNameDJ.height *
+                  2.5,
           columnSpacing: MediaQuery.of(context).size.width * 0.1,
           headingRowColor: MaterialStateProperty.all(Colors.black26),
           columns: const <DataColumn>[
