@@ -79,7 +79,7 @@ class TimeTableListState extends State<TimeTableList> {
       DataTable(
           headingRowColor: MaterialStateProperty.all(Colors.black26),
           columnSpacing: MediaQuery.of(context).size.width * 0.1,
-          dataRowMaxHeight: _textSize(
+          dataRowHeight: _textSize(
                               widget.timeTable.elementAt(0).acts.reduce((a, b) {
                                 return a.name.length > b.name.length ? a : b;
                               }).name,
@@ -176,7 +176,7 @@ class TimeTableListState extends State<TimeTableList> {
         textAlign: TextAlign.center,
       ),
       DataTable(
-          dataRowMaxHeight: _textSize(
+          dataRowHeight: _textSize(
                       widget.timeTable.elementAt(1).acts.reduce((a, b) {
                         return a.name.length > b.name.length ? a : b;
                       }).name,
