@@ -8,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 class TimeTableActs {
   final String time;
   final String name;
@@ -53,8 +56,6 @@ class TimeTableListState extends State<TimeTableList> {
   SharedPreferences? preferences;
   final int year = 2023;
   final int month = DateTime.august;
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
   final InitializationSettings initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings('app_icon'));
 
@@ -228,16 +229,26 @@ class TimeTableListState extends State<TimeTableList> {
         textColor: Colors.black,
         fontSize: 16.0);
     await flutterLocalNotificationsPlugin.zonedSchedule(
-        index,
-        'Reminder for ${act.name}',
-        '${act.name} starts his performance in 15 minutes',
-        tz.TZDateTime.from(
-            DateTime.now().add(const Duration(minutes: 2)), tz.local),
-        NotificationDetails(
-            android: AndroidNotificationDetails('$index', 'Eine Liebe',
-                channelDescription: 'Reminder for acts')),
+        0,
+        'Erinnerung für einen Auftritt',
+        '${act.name} tritt in 15 Minuten auf',
+        tz.TZDateTime(
+                tz.local,
+                year,
+                month,
+                int.parse(act.day),
+                int.parse(act.time.split(':').first).round(),
+                // convert offset in milli seconds to offset in hours
+                int.parse(act.time.split(':').last))
+            .subtract(const Duration(minutes: 15)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+                '0', 'Act reminder',
+                icon: 'app_icon',
+                importance: Importance.max,
+                priority: Priority.high)),
+        androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        androidAllowWhileIdle: true);
+            UILocalNotificationDateInterpretation.absoluteTime);
   }
 }
