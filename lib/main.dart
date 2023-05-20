@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/food.dart';
 import 'package:flutter_app/googleMaps.dart';
 import 'package:flutter_app/lineUp.dart';
+import 'package:flutter_app/games.dart';
 import 'package:flutter_app/rss_reader.dart';
 import 'package:flutter_app/utility.dart';
 
@@ -232,6 +233,39 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'Festival Information')));
               },
             ),
+            GestureDetector(
+              child: Container(
+                constraints: new BoxConstraints.expand(
+                  height: 200.0,
+                ),
+                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                margin: new EdgeInsets.only(bottom: 4),
+                decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage('assets/images/info_pic_1.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: new Stack(
+                  children: <Widget>[
+                    new Center(
+                      child: new Text('Games',
+                          textAlign: TextAlign.center,
+                          style: new TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 40.0,
+                            color: MyColors.eineLiebeDunkel,
+                          )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                //Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => GamesPage(title: 'Games')));
+              },
+            ),
           ],
         ),
       ),
@@ -281,6 +315,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text("News"),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => NewsPage(title: '',)));
+                },
+              ),
+              ListTile(
+                title: Text("Games"),
+                leading: Icon(Icons.casino),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => GamesPage(title: "Games")));
                 },
               ),
             ],
