@@ -55,8 +55,9 @@ class TimeTableListState extends State<TimeTableList> {
   SharedPreferences? preferences;
   final int year = 2023;
   final int month = DateTime.august;
-  final InitializationSettings initializationSettings = const InitializationSettings(
-      android: AndroidInitializationSettings('app_icon'));
+  final InitializationSettings initializationSettings =
+      const InitializationSettings(
+          android: AndroidInitializationSettings('app_icon'));
 
   @override
   void initState() {
@@ -77,15 +78,46 @@ class TimeTableListState extends State<TimeTableList> {
       const Text("Main Stage", textScaleFactor: 2, textAlign: TextAlign.center),
       DataTable(
           headingRowColor: MaterialStateProperty.all(Colors.black26),
+          columnSpacing: MediaQuery.of(context).size.width * 0.1,
+          dataRowMaxHeight: _textSize(
+                              widget.timeTable.elementAt(0).acts.reduce((a, b) {
+                                return a.name.length > b.name.length ? a : b;
+                              }).name,
+                              const TextStyle())
+                          .width /
+                      (MediaQuery.of(context).size.width * 0.25) *
+                      _textSize(
+                              widget.timeTable.elementAt(0).acts.reduce((a, b) {
+                                return a.name.length > b.name.length ? a : b;
+                              }).name,
+                              const TextStyle())
+                          .height *
+                      2.5 <=
+                  48
+              ? 48
+              : _textSize(
+                          widget.timeTable.elementAt(0).acts.reduce((a, b) {
+                            return a.name.length > b.name.length ? a : b;
+                          }).name,
+                          const TextStyle())
+                      .width /
+                  (MediaQuery.of(context).size.width * 0.25) *
+                  _textSize(
+                          widget.timeTable.elementAt(0).acts.reduce((a, b) {
+                            return a.name.length > b.name.length ? a : b;
+                          }).name,
+                          const TextStyle())
+                      .height *
+                  2.5,
           columns: const <DataColumn>[
             DataColumn(
-              label: Text('Time'),
+              label: Text('Uhrzeit'),
             ),
             DataColumn(
-              label: Text('Friday'),
+              label: Text('Künstler'),
             ),
             DataColumn(
-              label: Text('Reminder'),
+              label: Text('Erinnerung'),
             ),
           ],
           rows: widget.timeTable
@@ -115,7 +147,8 @@ class TimeTableListState extends State<TimeTableList> {
                                 preferences!.remove(e.value.name);
                               } else {
                                 Fluttertoast.showToast(
-                                    msg: "Time for reminder is in the past",
+                                    msg:
+                                        "Zeit für eine Erinnerung ist in der Vergangenheit",
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,
@@ -143,11 +176,39 @@ class TimeTableListState extends State<TimeTableList> {
         textAlign: TextAlign.center,
       ),
       DataTable(
+          dataRowMaxHeight: _textSize(
+                      widget.timeTable.elementAt(1).acts.reduce((a, b) {
+                        return a.name.length > b.name.length ? a : b;
+                      }).name,
+                      const TextStyle())
+                  .width /
+              (MediaQuery.of(context).size.width * 0.25) *
+              _textSize(
+                      widget.timeTable.elementAt(1).acts.reduce((a, b) {
+                        return a.name.length > b.name.length ? a : b;
+                      }).name,
+                      const TextStyle())
+                  .height *
+              2.5 <= 48 ? 48 : _textSize(
+              widget.timeTable.elementAt(1).acts.reduce((a, b) {
+                return a.name.length > b.name.length ? a : b;
+              }).name,
+              const TextStyle())
+              .width /
+              (MediaQuery.of(context).size.width * 0.25) *
+              _textSize(
+                  widget.timeTable.elementAt(1).acts.reduce((a, b) {
+                    return a.name.length > b.name.length ? a : b;
+                  }).name,
+                  const TextStyle())
+                  .height *
+              2.5,
+          columnSpacing: MediaQuery.of(context).size.width * 0.1,
           headingRowColor: MaterialStateProperty.all(Colors.black26),
           columns: const <DataColumn>[
-            DataColumn(label: Text('Time')),
-            DataColumn(label: Text('Saturday')),
-            DataColumn(label: Text('Reminder')),
+            DataColumn(label: Text('Uhrzeit')),
+            DataColumn(label: Text('Künstler')),
+            DataColumn(label: Text('Erinnerung')),
           ],
           rows: widget.timeTable
               .elementAt(1)
@@ -155,8 +216,18 @@ class TimeTableListState extends State<TimeTableList> {
               .asMap()
               .entries
               .map((e) => DataRow(cells: [
-                    DataCell(Text(e.value.time)),
-                    DataCell(Text(e.value.name)),
+                    DataCell(ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width *
+                                0.25), //SET max width
+                        child: Text(e.value.time,
+                            overflow: TextOverflow.visible))),
+                    DataCell(ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width *
+                                0.25), //SET max width
+                        child: Text(e.value.name,
+                            overflow: TextOverflow.visible))),
                     DataCell(
                       LikeButton(
                         isLiked: preferences?.getBool(e.value.name) == null ||
@@ -218,7 +289,7 @@ class TimeTableListState extends State<TimeTableList> {
             int.parse(act.time.split(':').last))
         .subtract(const Duration(minutes: 15));
     Fluttertoast.showToast(
-        msg: "Time for ${act.name} set at $timer",
+        msg: "Erinnerung für ${act.name} um $timer Uhr gesetzt",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
@@ -239,13 +310,21 @@ class TimeTableListState extends State<TimeTableList> {
                 int.parse(act.time.split(':').last))
             .subtract(const Duration(minutes: 15)),
         const NotificationDetails(
-            android: AndroidNotificationDetails(
-                '0', 'Act reminder',
+            android: AndroidNotificationDetails('0', 'Act reminder',
                 icon: 'app_icon',
                 importance: Importance.max,
                 priority: Priority.high)),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
+  Size _textSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
   }
 }

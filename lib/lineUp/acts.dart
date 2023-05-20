@@ -30,7 +30,7 @@ class Act {
 class ActList extends StatelessWidget {
   final List<Act> acts;
 
-  ActList({super.key, required this.acts});
+  const ActList({super.key, required this.acts});
 
   @override
   Widget build(BuildContext context) {
@@ -39,23 +39,23 @@ class ActList extends StatelessWidget {
         itemCount: acts.length,
         itemBuilder: (BuildContext context, int index) {
           return Card(
-              child: new Container(
-            constraints: new BoxConstraints.expand(
+              child: Container(
+            constraints: const BoxConstraints.expand(
               height: 200.0,
             ),
-            padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
-            margin: new EdgeInsets.only(bottom: 4),
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage(acts[index].image),
+            padding: const EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+            margin: const EdgeInsets.only(bottom: 4),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(acts[index].image),
                 fit: BoxFit.cover,
               ),
             ),
-            child: new Stack(
+            child: Stack(
               children: <Widget>[
-                new Center(
-                  child: new Text(acts[index].name,
-                      style: new TextStyle(
+                Center(
+                  child: Text(acts[index].name,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
                       )),
