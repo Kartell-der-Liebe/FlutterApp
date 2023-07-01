@@ -7,10 +7,17 @@ import 'package:flutter_app/lineUp.dart';
 import 'package:flutter_app/rss_reader.dart';
 import 'package:flutter_app/utility.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'firebase_options.dart';
 
 import 'information.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -43,7 +50,9 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(title: 'Home Page'),
       initialRoute: '/',
       routes: {
-        '/LineUp': (context) => LineUpPage(title: '',)
+        '/LineUp': (context) => LineUpPage(
+              title: '',
+            )
       },
     );
   }
@@ -68,8 +77,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -108,7 +115,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 constraints: new BoxConstraints.expand(
                   height: 200,
                 ),
-                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                padding:
+                    new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
@@ -121,18 +129,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     new Center(
                       child: new Text('Line Up',
                           style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40.0,
-                            color: MyColors.eineLiebeDunkel
-                          )
-                      ),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40.0,
+                              color: MyColors.eineLiebeDunkel)),
                     ),
                   ],
                 ),
               ),
               onTap: () {
                 //Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => LineUpPage(title: 'Line Up')));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext) => LineUpPage(title: 'Line Up')));
               },
             ),
             GestureDetector(
@@ -140,7 +147,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 constraints: new BoxConstraints.expand(
                   height: 200.0,
                 ),
-                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                padding:
+                    new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
@@ -155,16 +163,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: new TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 40.0,
-                              color: MyColors.eineLiebeDunkel
-                          )
-                      ),
+                              color: MyColors.eineLiebeDunkel)),
                     ),
                   ],
                 ),
               ),
               onTap: () {
                 //Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => FoodPage(title: 'Food')));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext) => FoodPage(title: 'Food')));
               },
             ),
             GestureDetector(
@@ -172,7 +179,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 constraints: new BoxConstraints.expand(
                   height: 200.0,
                 ),
-                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                padding:
+                    new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
@@ -187,16 +195,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: new TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 40.0,
-                              color: MyColors.eineLiebeDunkel
-                          )
-                      ),
+                              color: MyColors.eineLiebeDunkel)),
                     ),
                   ],
                 ),
               ),
               onTap: () {
                 //Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => NewsPage(title: 'News')));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext) => NewsPage(title: 'News')));
               },
             ),
             GestureDetector(
@@ -204,7 +211,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 constraints: new BoxConstraints.expand(
                   height: 200.0,
                 ),
-                padding: new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+                padding:
+                    new EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
                 margin: new EdgeInsets.only(bottom: 4),
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
@@ -221,73 +229,76 @@ class _MyHomePageState extends State<MyHomePage> {
                             fontWeight: FontWeight.bold,
                             fontSize: 40.0,
                             color: MyColors.eineLiebeDunkel,
-                          )
-                      ),
+                          )),
                     ),
                   ],
                 ),
               ),
               onTap: () {
                 //Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: 'Festival Information')));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext) =>
+                        InformationPage(title: 'Festival Information')));
               },
             ),
           ],
         ),
       ),
-      drawer:
-      Drawer(
+      drawer: Drawer(
         child: ListView(
-            children: <Widget>[
-              Container(
-                decoration: new BoxDecoration(
-                  color:Color(0x0FF002C3C),
-                  gradient: LinearGradient(
-                      colors: [
-                        Color(0x0FF002C3C),
-                        Color(0xFFFDEA04)
-                      ],
+          children: <Widget>[
+            Container(
+              decoration: new BoxDecoration(
+                color: Color(0x0FF002C3C),
+                gradient: LinearGradient(
+                    colors: [Color(0x0FF002C3C), Color(0xFFFDEA04)],
                     begin: Alignment.centerRight,
-                    end: Alignment.centerLeft
-                    ),
+                    end: Alignment.centerLeft),
+              ),
+              child: DrawerHeader(
+                child: Image.asset(
+                  "assets/images/el_herz.png",
                 ),
-                child:DrawerHeader(
-                  child: Image.asset("assets/images/el_herz.png",),
-                ),
               ),
-              ListTile(
-                title: Text("Line Up"),
-                leading: Icon(Icons.queue_music),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => LineUpPage(title: 'Line Up')));
-                },
-              ),
-              ListTile(
-                title: Text("Food"),
-                leading: Icon(Icons.fastfood),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => FoodPage(title: 'Food')));
-                },
-              ),
-              ListTile(
-                title: Text("Festival Information"),
-                leading: Icon(Icons.info),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => InformationPage(title: "Festival Information")));
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.fiber_new),
-                title: Text("News"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext) => NewsPage(title: '',)));
-                },
-              ),
-            ],
-          ),
-        ),// This trailing comma makes auto-formatting nicer for build methods.
-      );
+            ),
+            ListTile(
+              title: Text("Line Up"),
+              leading: Icon(Icons.queue_music),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext) => LineUpPage(title: 'Line Up')));
+              },
+            ),
+            ListTile(
+              title: Text("Food"),
+              leading: Icon(Icons.fastfood),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext) => FoodPage(title: 'Food')));
+              },
+            ),
+            ListTile(
+              title: Text("Festival Information"),
+              leading: Icon(Icons.info),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext) =>
+                        InformationPage(title: "Festival Information")));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.fiber_new),
+              title: Text("News"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext) => NewsPage(
+                          title: '',
+                        )));
+              },
+            ),
+          ],
+        ),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
   }
 }
-
-

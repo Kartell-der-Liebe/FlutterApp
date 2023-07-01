@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:device_calendar/device_calendar.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AppRoutes {
   static final calendars = "/";
@@ -21,8 +24,34 @@ class LineUpPage extends StatefulWidget {
   LineUpPageState createState() => LineUpPageState();
 }
 
+class CloudStorage {
+  static Future<void> downloadFile(String pathInBucket, File file) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    final fileRef = storageRef.child(pathInBucket);
+
+    //TODO: implement caching mechanism
+    try {
+      await fileRef.writeToFile(file);
+    } on FirebaseException catch (e) {
+      //TODO: show notification about failing to fetch content updates
+    }
+  }
+}
+
+class RemoteAssetBundle {
+  static Future<String> loadString(String path) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File(directory.path);
+
+    await CloudStorage.downloadFile(path, file);
+
+    return await file.readAsString();
+  }
+}
+
 class LineUpPageState extends State<LineUpPage> {
   //Calendar Variables
+
   bool deleted = false;
   bool calendarSelected = false;
   String calendarButtonText = 'Select Calendar to Add Events';
@@ -44,6 +73,7 @@ class LineUpPageState extends State<LineUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    //CloudStorage.downloadLineUp();
     return DefaultTabController(
         length: 2,
         child: new Scaffold(
@@ -64,18 +94,16 @@ class LineUpPageState extends State<LineUpPage> {
                 child: new Center(
                   // Use future builder and DefaultAssetBundle to load the local JSON file
                   child: new FutureBuilder(
-                      future: DefaultAssetBundle.of(context)
-                          .loadString('assets/json/acts.json'),
+                      //future: DefaultAssetBundle.of(context)
+                      //    .loadString('assets/json/acts.json'),
+                      future: RemoteAssetBundle.loadString("acts.json"),
                       builder: (context, snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.none:
-                          case ConnectionState.waiting:
-                            return Center(child: CircularProgressIndicator());
-                            break;
-                          default:
-                            List<Act> acts =
-                                parseJosnAct(snapshot.data.toString());
-                            return new ActList(acts: acts);
+                        if (snapshot.hasData) {
+                          List<Act> acts =
+                              parseJosnAct(snapshot.data.toString());
+                          return new ActList(acts: acts);
+                        } else {
+                          return Center(child: CircularProgressIndicator());
                         }
                       }),
                 ),
